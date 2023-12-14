@@ -1,4 +1,3 @@
-import React from "react";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
@@ -7,11 +6,10 @@ import Typography from "@mui/material/Typography";
 import sideImage from "@img/studying-background.png";
 import planinLogo from "@img/logo.svg";
 import supabase from "@api/supabase";
-import { Simulate } from "react-dom/test-utils";
-import error = Simulate.error;
 
-const Login: React.FC = () => {
-  async function handleSignInWithGoogle(response: any) {
+const Login = () => {
+  async function handleSignInWithGoogle(response) {
+    // eslint-disable-next-line no-unused-vars
     const { data, error } = await supabase.auth.signInWithIdToken({
       provider: "google",
       token: response.credential,
