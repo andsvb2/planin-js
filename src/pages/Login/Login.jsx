@@ -3,8 +3,8 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 
-import sideImage from "@img/studying-background.png";
-import planinLogo from "@img/logo.svg";
+import sideImage from "/studying-background.png";
+import planinLogo from "/logo.svg";
 import supabase from "@api/supabase";
 
 const Login = () => {
