@@ -89,14 +89,26 @@ const Curso = () => {
             handleClose={() => setIsModalOpen(false)}
           />
           <Box>
-            {cursos.map((curso) => (
-              <CardListCurso
-                key={curso.id}
-                instituicao_campus={`${curso.campus.instituicao.sigla} - ${curso.campus.sigla}`}
-                nome_curso={curso.nome}
-                id={curso.id}
-              />
-            ))}
+            {cursos.length > 0 ? (
+              cursos.map((curso) => (
+                <CardListCurso
+                  key={curso.id}
+                  instituicao_campus={`${curso.campus.instituicao.sigla} - ${curso.campus.sigla}`}
+                  nome_curso={curso.nome}
+                  id={curso.id}
+                />
+              ))
+            ) : (
+              <Typography
+                variant={"h4"}
+                textAlign={"center"}
+                color={"red"}
+                m={2}
+                sx={{ border: "1px solid red", borderRadius: 2 }}
+              >
+                Nenhum curso cadastrado
+              </Typography>
+            )}
           </Box>
         </Stack>
       </Grid>

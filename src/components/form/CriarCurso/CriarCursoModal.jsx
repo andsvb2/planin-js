@@ -68,21 +68,18 @@ const CriarCursoModal = ({ show, handleClose }) => {
   }, []);
 
   async function saveCurso() {
-    let { data: curso, error } = await supabase
-      .from("curso")
-      .insert([
-        {
-          nome: cursoSelecionado,
-          campus_id: campusSelecionado.id,
-          turno_id: turnoSelecionado.id,
-        },
-      ])
-      .select();
+    let { data: curso, error } = await supabase.from("curso").insert([
+      {
+        nome: cursoSelecionado,
+        campus_id: campusSelecionado,
+        turno_id: turnoSelecionado,
+      },
+    ]);
   }
 
   const handleSaveCurso = () => {
     saveCurso();
-
+    window.location.reload();
     handleClose();
   };
 
