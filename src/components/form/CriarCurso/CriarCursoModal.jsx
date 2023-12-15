@@ -1,23 +1,96 @@
-import { useState } from "react";
-import { Modal, TextField, Select, MenuItem, Fade } from "@mui/material";
-import { Button } from "@mui/material";
+import { useEffect, useState } from "react";
+import MenuItem from "@mui/material/MenuItem";
+import Fade from "@mui/material/Fade";
+import Modal from "@mui/material/Modal";
+import TextField from "@mui/material/TextField";
+import Select from "@mui/material/Select";
+import Button from "@mui/material/Button";
+import supabase from "@api/supabase.js";
 
 // eslint-disable-next-line react/prop-types
 const CriarCursoModal = ({ show, handleClose }) => {
-  const [nomeCurso, setNomeCurso] = useState("");
-  const [campus, setCampus] = useState("");
-  const [turno, setTurno] = useState("");
-  const [instituicao, setInstituicao] = useState("");
+  const [cursoSelecionado, setCursoSelecionado] = useState("");
+  const [campusSelecionado, setCampusSelecionado] = useState([]);
+  const [turnoSelecionado, setTurnoSelecionado] = useState("");
+  const [instituicaoSelecionada, setInstituicaoSelecionada] = useState("");
+
+  const [cursos, setCursos] = useState([]);
+  const [turnos, setTurnos] = useState([]);
+  const [instituicoes, setInstituicoes] = useState([]);
+  const [campi, setCampi] = useState([]);
+
+  async function getCursos() {
+    let { data: curso, error } = await supabase.from("curso").select("*");
+
+    if (!error) {
+      setCursos(curso);
+    } else {
+      alert("Erro ao buscar os cursos");
+    }
+  }
+
+  async function getTurnos() {
+    let { data: turno, error } = await supabase.from("turno").select("*");
+    if (!error) {
+      setTurnos(turno);
+    } else {
+      alert("Erro ao buscar os turnos");
+    }
+  }
+
+  async function getInstituicoes() {
+    let { data: instituicao, error } = await supabase
+      .from("instituicao")
+      .select("*");
+
+    if (!error) {
+      setInstituicoes(instituicao);
+    } else {
+      alert("Erro ao buscar as instituições");
+    }
+  }
+
+  async function getCampi() {
+    let { data: campus, error } = await supabase.from("campus").select("*");
+
+    if (!error) {
+      setCampi(campus);
+    } else {
+      alert("Erro ao buscar os campi");
+    }
+  }
+
+  useEffect(() => {
+    getCursos();
+    getTurnos();
+    getInstituicoes();
+    getCampi();
+  }, []);
+
+  async function saveCurso() {
+    let { data: curso, error } = await supabase
+      .from("curso")
+      .insert([
+        {
+          nome: cursoSelecionado,
+          campus_id: campusSelecionado.id,
+          turno_id: turnoSelecionado.id,
+        },
+      ])
+      .select();
+  }
 
   const handleSaveCurso = () => {
+    saveCurso();
+
     handleClose();
   };
 
   const handleCancelCurso = () => {
-    setNomeCurso("");
-    setCampus("");
-    setTurno("");
-    setInstituicao("");
+    setCursoSelecionado("");
+    setCampusSelecionado("");
+    setTurnoSelecionado("");
+    setInstituicaoSelecionada("");
     handleClose();
   };
 
@@ -49,52 +122,59 @@ const CriarCursoModal = ({ show, handleClose }) => {
           </h2>
           <TextField
             label="Nome do curso"
-            value={nomeCurso}
-            onChange={(e) => setNomeCurso(e.target.value)}
+            value={cursoSelecionado}
+            onChange={(e) => setCursoSelecionado(e.target.value)}
             required
             fullWidth
             style={{ marginBottom: "15px" }}
           />
           <Select
             label="Campus"
-            value={campus}
-            onChange={(e) => setCampus(e.target.value)}
+            value={campusSelecionado}
+            onChange={(e) => setCampusSelecionado(e.target.value)}
             required
             fullWidth
             style={{ marginBottom: "15px", color: "#000000" }}
             MenuComponent={MenuWithTransition}
           >
-            <MenuItem value="MT">MT</MenuItem>
-            <MenuItem value="CG">CG</MenuItem>
+            {campi.map((campus) => (
+              <MenuItem key={campus.id} value={campus.id}>
+                {campus.sigla} - {campus.nome}
+              </MenuItem>
+            ))}
           </Select>
 
           <Select
             label="Turno"
-            value={turno}
-            onChange={(e) => setTurno(e.target.value)}
+            value={turnoSelecionado}
+            onChange={(e) => setTurnoSelecionado(e.target.value)}
             fullWidth
             style={{ marginBottom: "15px", color: "#000000" }}
           >
-            <MenuItem value="Matutino">Matutino</MenuItem>
-            <MenuItem value="Vespertino">Vespertino</MenuItem>
-            <MenuItem value="Noturno">Noturno</MenuItem>
+            {turnos.map((turno) => (
+              <MenuItem key={turno.id} value={turno.id}>
+                {turno.turno}
+              </MenuItem>
+            ))}
           </Select>
           <Select
             label="Instituição"
-            value={instituicao}
-            onChange={(e) => setInstituicao(e.target.value)}
+            value={instituicaoSelecionada}
+            onChange={(e) => setInstituicaoSelecionada(e.target.value)}
             fullWidth
             style={{ marginBottom: "20px" }}
           >
-            <MenuItem value="UFPB">UFPB</MenuItem>
-            <MenuItem value="UFRN">UFRN</MenuItem>
-            <MenuItem value="UFCG">UFCG</MenuItem>
+            {instituicoes.map((instituicao) => (
+              <MenuItem key={instituicao.id} value={instituicao.id}>
+                {instituicao.sigla} - {instituicao.nome}
+              </MenuItem>
+            ))}
           </Select>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <Button
               onClick={handleCancelCurso}
               variant="outlined"
-              style={{ color: "#6357F1", borderRadius: "20px"  }}
+              style={{ color: "#6357F1", borderRadius: "20px" }}
             >
               Cancelar
             </Button>
@@ -102,7 +182,11 @@ const CriarCursoModal = ({ show, handleClose }) => {
               variant="contained"
               color="primary"
               onClick={handleSaveCurso}
-              style={{ backgroundColor: "#6357F1", color: "#fff", borderRadius: "20px" }}
+              style={{
+                backgroundColor: "#6357F1",
+                color: "#fff",
+                borderRadius: "20px",
+              }}
             >
               Salvar
             </Button>
