@@ -3,6 +3,9 @@ import { CriarCursoModal } from "@comp/form/CriarCurso";
 import { Menu } from "@comp/ui/Menu";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Unstable_Grid2";
+import Typography from "@mui/material/Typography";
+import { Button } from "@mui/material";
+
 
 const Curso = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -13,8 +16,12 @@ const Curso = () => {
         <Menu />
       </Box>
       <Box>
-        <h1>Curso</h1>
-        <button onClick={() => setIsModalOpen(true)}>Criar curso</button>
+      <Typography variant="h1" style={{ fontSize: "2.5rem" }}>Cursos</Typography>
+        <Button
+              variant="contained"
+              color="primary"
+              style={{ backgroundColor: "#6357F1", color: "#fff", borderRadius: "20px" }}
+              onClick={() => setIsModalOpen(true)}> + Curso</Button>
       <CriarCursoModal show={isModalOpen} handleClose={() => setIsModalOpen(false)} />
       </Box>
     </Grid>
