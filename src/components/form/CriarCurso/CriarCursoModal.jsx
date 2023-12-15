@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Modal, TextField, Select, MenuItem, Fade } from "@mui/material";
 import { Button } from "@mui/material";
 
+// eslint-disable-next-line react/prop-types
 const CriarCursoModal = ({ show, handleClose }) => {
   const [nomeCurso, setNomeCurso] = useState("");
   const [campus, setCampus] = useState("");
