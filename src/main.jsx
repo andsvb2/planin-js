@@ -11,6 +11,8 @@ import "@fontsource/inter/700.css";
 import "@fontsource/inter/900.css";
 import "@fontsource/lato/700.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { ThemeProvider } from "@mui/material/styles";
+import TemaPlanin from "@theme/TemaPlanin.jsx";
 import Login from "@pages/Login";
 import Teste from "@pages/Teste.jsx";
 import { Home } from "@pages/Home";
@@ -22,24 +24,22 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <Login />,
-    children: [
-      {
-        path: "home",
-        element: <Home />,
-      },
-      {
-        path: "calendario",
-        element: <Calendario />,
-      },
-      {
-        path: "curso",
-        element: <Curso />,
-      },
-      {
-        path: "disciplina",
-        element: <Disciplina />,
-      },
-    ],
+  },
+  {
+    path: "/home",
+    element: <Home />,
+  },
+  {
+    path: "/calendarios",
+    element: <Calendario />,
+  },
+  {
+    path: "/cursos",
+    element: <Curso />,
+  },
+  {
+    path: "/disciplinas",
+    element: <Disciplina />,
   },
   {
     path: "/teste",
@@ -50,6 +50,8 @@ const router = createBrowserRouter([
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <ThemeProvider theme={TemaPlanin}>
+      <RouterProvider router={router} />
+    </ThemeProvider>
   </React.StrictMode>,
 );
