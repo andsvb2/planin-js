@@ -1,14 +1,17 @@
-import { Menu } from "@ui/Menu";
-import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
+import Grid from "@mui/material/Unstable_Grid2";
+import { Menu } from "@ui/Menu";
 
 const Teste = () => {
   return (
-    <Container component="main">
+    <Grid component="main">
       <Box component="header">
         <Menu />
       </Box>
-    </Container>
+      <Box>
+        <h1>Teste</h1>
+      </Box>
+    </Grid>
   );
 };
 
