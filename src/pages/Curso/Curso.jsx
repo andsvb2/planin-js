@@ -11,7 +11,10 @@ const Curso = () => {
   const [cursos, setCursos] = useState([]);
 
   async function getData() {
-    let { data: curso, error } = await supabase.from("curso").select("*");
+    let { data: curso, error } = await supabase
+      .from("curso")
+      .select("*, campus(nome, sigla, instituicao(nome, sigla))");
+
     if (!error) {
       setCursos(curso);
     } else {
