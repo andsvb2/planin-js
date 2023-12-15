@@ -11,9 +11,9 @@ const TemaPlanin = createTheme({
     },
     text: {
       hint: "#6357f1",
-      primary: "#6357ff",
-      secondary: "#6357ff",
-      disabled: "#6357ff",
+      primary: "#6357ff", // Cor do texto principal
+      secondary: "#6357ff", // Cor do texto secundário
+      disabled: "#6357ff", // Cor do texto desativado
     },
   },
   components: {
@@ -21,6 +21,16 @@ const TemaPlanin = createTheme({
       defaultProps: {
         useFlexGap: true,
       },
+    },
+  },
+  typography: {
+    fontFamily: [
+      'Inter', // Texto padrão
+      'Lato', // Títulos
+      'sans-serif',
+    ].join(','),
+    allVariants: {
+      color: "#6357ff", // Cor do texto global
     },
   },
 });
