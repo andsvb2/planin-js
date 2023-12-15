@@ -1,8 +1,14 @@
+import { Menu } from "@ui/Menu";
+import Container from "@mui/material/Container";
+import Box from "@mui/material/Box";
+
 const Teste = () => {
   return (
-    <>
-      <h1>Teste</h1>
-    </>
+    <Container component="main">
+      <Box component="header">
+        <Menu />
+      </Box>
+    </Container>
   );
 };
 
