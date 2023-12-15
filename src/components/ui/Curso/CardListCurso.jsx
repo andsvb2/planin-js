@@ -1,21 +1,20 @@
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
+import Grid from "@mui/material/Grid";
 
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
-import Grid from '@mui/material/Grid';
-
-export default function CardListCurso({ sigla_instituicao, nome_curso }) {
+export default function CardListCurso({ instituicao_campus, nome_curso }) {
   return (
     <Card sx={{ minWidth: 275 }}>
       <CardContent>
-        <Grid container spacing={1} direction="column" alignItems="center">
-          <Grid item>
-            <Typography variant="h5" component="div">
-              {sigla_instituicao}
+        <Grid container direction="row" alignItems="center">
+          <Grid item xs={4}>
+            <Typography variant="h5" align="center">
+              {instituicao_campus}
             </Typography>
           </Grid>
           <Grid item>
-            <Typography variant="body2">
+            <Typography variant="body2" textAlign="center">
               {nome_curso}
             </Typography>
           </Grid>
