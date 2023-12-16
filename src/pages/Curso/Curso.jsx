@@ -42,15 +42,13 @@ const Curso = () => {
         sx={{ justifyContent: "center" }}
       >
         <Stack
-          spacing={2}
+          spacing={3}
           sx={{
             justifyContent: "space-between",
-            borderRadius: 3,
-            border: "3px #F1F1F1 solid",
-            margin: "1px",
+            margin: "50px",
           }}
         >
-          <Box width={132} height={38} ml={1}>
+          <Box width={132} height={38} ml={4}>
             <Typography variant="h1" style={{ fontSize: "2.5rem" }}>
               Cursos
             </Typography>
