@@ -10,28 +10,26 @@ export default function CardListCurso({ cursoId, instituicao_campus, nome_curso 
   const [isModalOpen, setModalOpen] = useState(false);
 
   const handleCardClick = () => {
-    // Abra o modal e passe o cursoId
     setModalOpen(true);
   };
 
   const handleCloseModal = () => {
-    // Feche o modal ou faça qualquer outra lógica desejada aqui
     setModalOpen(false);
   };
 
   return (
     <>
       <CardActionArea onClick={handleCardClick}>
-        <Card sx={{ minWidth: 275, backgroundColor: '#F2EFEF', ml: 3, mr: 3, mb: 3 }}>
+        <Card sx={{ minWidth: 275, backgroundColor: '#F2EFEF', ml: 3, mr: 3, mb: 3, border: '0.5px solid #f0f0f0', borderRadius: 6 }}>
           <CardContent>
             <Grid container direction="row" alignItems="center">
               <Grid item xs={4}>
-                <Typography variant="body1" align="center">
+                <Typography variant="body1" fontWeight="inline" align="center">
                   {instituicao_campus}
                 </Typography>
               </Grid>
               <Grid item>
-                <Typography variant="h6" textAlign="center">
+                <Typography variant="h6" textAlign="center" fontWeight="bold">
                   {nome_curso}
                 </Typography>
               </Grid>
