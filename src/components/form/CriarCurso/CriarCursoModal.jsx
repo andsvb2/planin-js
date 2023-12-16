@@ -10,6 +10,7 @@ import supabase from "@api/supabase.js";
 // eslint-disable-next-line react/prop-types
 const CriarCursoModal = ({ show, handleClose }) => {
   const [cursoSelecionado, setCursoSelecionado] = useState("");
+  const [siglaSelecionada, setSiglaSelecionada] = useState("");
   const [campusSelecionado, setCampusSelecionado] = useState([]);
   const [turnoSelecionado, setTurnoSelecionado] = useState("");
   const [instituicaoSelecionada, setInstituicaoSelecionada] = useState("");
@@ -125,6 +126,16 @@ const CriarCursoModal = ({ show, handleClose }) => {
             fullWidth
             style={{ marginBottom: "15px" }}
           />
+
+          <TextField
+            label="Sigla (opcional)"
+            value={siglaSelecionada}
+            onChange={(e) => setSiglaSelecionada(e.target.value)}
+            required
+            fullWidth
+            style={{ marginBottom: "15px" }}
+          />
+
           <Select
             label="Campus"
             value={campusSelecionado}
@@ -151,19 +162,6 @@ const CriarCursoModal = ({ show, handleClose }) => {
             {turnos.map((turno) => (
               <MenuItem key={turno.id} value={turno.id}>
                 {turno.turno}
-              </MenuItem>
-            ))}
-          </Select>
-          <Select
-            label="Instituição"
-            value={instituicaoSelecionada}
-            onChange={(e) => setInstituicaoSelecionada(e.target.value)}
-            fullWidth
-            style={{ marginBottom: "20px" }}
-          >
-            {instituicoes.map((instituicao) => (
-              <MenuItem key={instituicao.id} value={instituicao.id}>
-                {instituicao.sigla} - {instituicao.nome}
               </MenuItem>
             ))}
           </Select>
