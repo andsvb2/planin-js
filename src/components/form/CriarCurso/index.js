@@ -1,5 +1,3 @@
 import CriarCursoModal from "./CriarCursoModal";
 
-export {
-    CriarCursoModal
-};
+export { CriarCursoModal };

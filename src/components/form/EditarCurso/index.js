@@ -1,5 +1,3 @@
 import EditarCursoModal from "./EditarCursoModal";
 
-export {
-    EditarCursoModal
-};
+export { EditarCursoModal };

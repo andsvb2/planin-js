@@ -25,10 +25,10 @@ const TemaPlanin = createTheme({
   },
   typography: {
     fontFamily: [
-      'Inter', // Texto padrão
-      'Lato', // Títulos
-      'sans-serif',
-    ].join(','),
+      "Inter", // Texto padrão
+      "Lato", // Títulos
+      "sans-serif",
+    ].join(","),
     allVariants: {
       color: "#6357ff", // Cor do texto global
     },
