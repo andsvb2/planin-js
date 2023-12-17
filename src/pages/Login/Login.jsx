@@ -7,6 +7,10 @@ import sideImage from "@img/studying-background.png";
 import planinLogo from "@img/logo.svg";
 import supabase from "@api/supabase";
 
+import Glogin from "@img/entrarComGoogle.jpg"
+
+import { Link } from "react-router-dom";
+
 const Login = () => {
   async function handleSignInWithGoogle(response) {
     // eslint-disable-next-line no-unused-vars
@@ -91,6 +95,28 @@ const Login = () => {
                 data-logo_alignment="left"
               ></div>
             </Box>
+
+            <Box
+          component={Link}
+          to={"/cursos"}
+          sx={{
+            width: 106,
+            height: 92,
+            flexDirection: "column",
+            justifyContent: "flex-start",
+            alignItems: "center",
+            gap: 1,
+            display: "inline-flex",
+            textDecoration: "none",
+          }}
+        >
+          <img
+            style={{marginTop:"-75px"}}
+            src={Glogin}
+            alt="entrar com google"
+          />
+        </Box>
+
             <Box
               sx={{
                 width: "100%",
