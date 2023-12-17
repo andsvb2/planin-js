@@ -11,7 +11,6 @@ import supabase from "@api/supabase.js";
 
 const Curso = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   const [cursos, setCursos] = useState([]);
 
   async function getData() {
@@ -87,6 +86,7 @@ const Curso = () => {
           <CriarCursoModal
             show={isModalOpen}
             handleClose={() => setIsModalOpen(false)}
+            
           />
           <Box>
             {cursos.length > 0 ? (
