@@ -102,7 +102,11 @@ const Disciplina = () => {
                     boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
                   }}
                 >
-                  <Typography variant="body1" fontWeight="inline" align="center">
+                  <Typography
+                    variant="body1"
+                    fontWeight="inline"
+                    align="center"
+                  >
                     {`${disciplina.curso.campus.instituicao.sigla} - ${disciplina.curso.campus.sigla}`}
                   </Typography>
                   <Typography variant="h6" textAlign="center" fontWeight="bold">

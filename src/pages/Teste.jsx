@@ -1,36 +1,29 @@
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Unstable_Grid2";
-import { Menu } from "@ui/Menu";
-import { CardListCurso } from "@ui/Curso";
-import { useEffect, useState } from "react";
-import supabase from "@api/supabase.js";
+import supabase from "@api/supabase";
+import { useEffect } from "react";
 
 const Teste = () => {
-  const [cursos, setCursos] = useState([]);
+  const GOOGLE_DATA_CLIENT_ID = import.meta.env.VITE_GOOGLE_DATA_CLIENT_ID;
+  console.log(GOOGLE_DATA_CLIENT_ID);
 
-  async function getData() {
-    let { data: curso, error } = await supabase
-      .from("curso")
-      .select("*, campus(nome, sigla, instituicao(nome, sigla))");
-
-    if (!error) {
-      setCursos(curso);
-    } else {
-      alert("Erro ao buscar os cursos");
-    }
+  function handleCredentialResponse(response) {
+    console.log("Encoded JWT ID token: " + response.credential);
   }
-
-  useEffect(() => {
-    getData();
-  }, []);
+  window.onload = function () {
+    google.accounts.id.initialize({
+      client_id: GOOGLE_DATA_CLIENT_ID,
+      callback: handleCredentialResponse,
+    });
+    google.accounts.id.renderButton(
+      document.getElementById("buttonDiv"),
+      { theme: "outline", size: "large" }, // customization attributes
+    );
+    google.accounts.id.prompt(); // also display the One Tap dialog
+  };
 
   return (
-    <Grid component="main">
-      <Box component="header">
-        <Menu />
-      </Box>
-      <Box></Box>
-    </Grid>
+    <>
+      <div id="buttonDiv"></div>
+    </>
   );
 };
 
