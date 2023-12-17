@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CriarCursoModal } from "@comp/form/CriarCurso";
 import { Menu } from "@comp/ui/Menu";
 import { CardListCurso } from "@comp/ui/Curso";
@@ -8,6 +8,8 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import supabase from "@api/supabase.js";
+
+import noDataImage from "../../assets/img/attention_5973444.png"; // Importe a imagem necessária
 
 const Curso = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -84,7 +86,6 @@ const Curso = () => {
           <CriarCursoModal
             show={isModalOpen}
             handleClose={() => setIsModalOpen(false)}
-            
           />
           <Box>
             {cursos.length > 0 ? (
@@ -97,15 +98,30 @@ const Curso = () => {
                 />
               ))
             ) : (
-              <Typography
-                variant={"h4"}
-                textAlign={"center"}
-                color={"red"}
-                m={2}
-                sx={{ border: "1px solid red", borderRadius: 2 }}
+              <Box
+                sx={{
+                  border: "2px dashed #ccc",
+                  borderRadius: "8px",
+                  padding: "16px",
+                  backgroundColor: "#F9F9F9",
+                  textAlign: "center",
+                }}
               >
-                Nenhum curso cadastrado
-              </Typography>
+                <Box
+                  component="img"
+                  src={noDataImage}
+                  alt="Nenhum dado encontrado"
+                  sx={{ width: 100, height: 100, mb: 2 }}
+                />
+                <Typography
+                  variant={"h4"}
+                  textAlign={"center"}
+                  color={"text.secondary"}
+                  m={2}
+                >
+                  Nenhum curso cadastrado
+                </Typography>
+              </Box>
             )}
           </Box>
         </Stack>
