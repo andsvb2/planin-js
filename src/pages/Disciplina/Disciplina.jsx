@@ -6,7 +6,7 @@ import Grid from "@mui/material/Unstable_Grid2";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
-import supabase from "@api/supabase.js";
+import supabase from "@services/supabase.js";
 
 import noDataImage from "../../assets/img/attention_5973444.png"; // Importe a imagem necessária
 
