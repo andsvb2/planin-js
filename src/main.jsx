@@ -13,6 +13,7 @@ import "@fontsource/lato/700.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ThemeProvider } from "@mui/material/styles";
 import { SpeedInsights } from "@vercel/speed-insights/react";
+import { Analytics } from "@vercel/analytics/react";
 import TemaPlanin from "@theme/TemaPlanin.jsx";
 import Login from "@pages/Login";
 import Teste from "@pages/Teste.jsx";
@@ -53,6 +54,7 @@ root.render(
   <React.StrictMode>
     <ThemeProvider theme={TemaPlanin}>
       <RouterProvider router={router} />
+      <Analytics />
       <SpeedInsights />
     </ThemeProvider>
   </React.StrictMode>,
