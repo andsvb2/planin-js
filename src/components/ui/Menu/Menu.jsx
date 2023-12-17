@@ -15,11 +15,12 @@ const Menu = () => {
   return (
     <div
       style={{
-        width: "100%",
-        height: "100%",
+        width: "90%",
+        height: "90%",
         justifyContent: "space-between",
         alignItems: "center",
         display: "inline-flex",
+        marginLeft: "3%",
       }}
     >
       <Box
