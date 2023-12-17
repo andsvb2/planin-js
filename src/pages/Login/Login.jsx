@@ -8,6 +8,7 @@ import planinLogo from "@img/logo.svg";
 import supabase from "@api/supabase";
 
 const Login = () => {
+  const GOOGLE_DATA_CLIENT_ID = import.meta.env.VITE_GOOGLE_DATA_CLIENT_ID;
   async function handleSignInWithGoogle(response) {
     // eslint-disable-next-line no-unused-vars
     const { data, error } = await supabase.auth.signInWithIdToken({
@@ -15,15 +16,31 @@ const Login = () => {
       token: response.credential,
       nonce: "NONCE", // must be the same one as provided in data-nonce (if any)
     });
-    console.log(data);
+    console.log("handleSignInMethod", data, error);
   }
 
-  const GOOGLE_DATA_CLIENT_ID = import.meta.env.VITE_GOOGLE_DATA_CLIENT_ID;
+  window.onload = function () {
+    google.accounts.id.initialize({
+      client_id: GOOGLE_DATA_CLIENT_ID,
+      callback: handleSignInWithGoogle,
+    });
+    google.accounts.id.renderButton(
+      document.getElementById("buttonDiv"),
+      { theme: "outline", size: "large", shape: "pill" }, // customization attributes
+    );
+    // google.accounts.id.prompt(); // also display the One Tap dialog
+  };
 
   return (
     <Container
       component="main"
-      sx={{ width: "100dvw", height: "100dvh" }}
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        height: "90dvh", // Viewport height
+      }}
       disableGutters
     >
       <Grid container spacing={3}>
@@ -67,30 +84,12 @@ const Login = () => {
                 width: "80%",
                 maxWidth: 400,
                 marginBottom: "1rem",
-                marginTop: "3rem",
               }}
             />
             <Box>
-              <div
-                id="g_id_onload"
-                data-client_id={GOOGLE_DATA_CLIENT_ID}
-                data-context="signin"
-                data-ux_mode="popup"
-                data-callback={handleSignInWithGoogle}
-                data-nonce=""
-                data-auto_prompt="false"
-              ></div>
-
-              <div
-                className="g_id_signin"
-                data-type="standard"
-                data-shape="rectangular"
-                data-theme="outline"
-                data-text="continue_with"
-                data-size="large"
-                data-logo_alignment="left"
-              ></div>
+              <div id="buttonDiv"></div>
             </Box>
+
             <Box
               sx={{
                 width: "100%",
@@ -107,7 +106,6 @@ const Login = () => {
                   color: "#2D8FEB",
                   fontWeight: "bold",
                   textAlign: "center",
-                  marginTop: "-11rem",
                   whiteSpace: "nowrap",
                 }}
               >
