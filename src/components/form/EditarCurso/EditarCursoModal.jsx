@@ -5,7 +5,7 @@ import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
 import Select from "@mui/material/Select";
 import Button from "@mui/material/Button";
-import supabase from "@api/supabase.js";
+import supabase from "@services/supabase.js";
 
 // eslint-disable-next-line react/prop-types
 const EditarCursoModal = ({ show, handleClose, cursoId }) => {
