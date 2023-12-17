@@ -5,7 +5,7 @@ import Typography from "@mui/material/Typography";
 
 import sideImage from "@img/studying-background.png";
 import planinLogo from "@img/logo.svg";
-import supabase from "@api/supabase";
+import supabase from "@services/supabase.js";
 
 const Login = () => {
   const GOOGLE_DATA_CLIENT_ID = import.meta.env.VITE_GOOGLE_DATA_CLIENT_ID;
