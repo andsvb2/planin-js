@@ -1,4 +1,6 @@
 import { createTheme } from "@mui/material/styles";
+import { blue } from "@mui/material/colors";
+import { ptBR } from "@mui/material/locale";
 
 const TemaPlanin = createTheme({
   palette: {
@@ -13,14 +15,7 @@ const TemaPlanin = createTheme({
       hint: "#6357f1",
       primary: "#6357ff", // Cor do texto principal
       secondary: "#6357ff", // Cor do texto secundário
-      disabled: "#6357ff", // Cor do texto desativado
-    },
-  },
-  components: {
-    MuiStack: {
-      defaultProps: {
-        useFlexGap: true,
-      },
+      disabled: "#6357ff", // Cor do texto desati6357F1vado
     },
   },
   typography: {
@@ -33,6 +28,26 @@ const TemaPlanin = createTheme({
       color: "#6357ff", // Cor do texto global
     },
   },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          color: "#fff",
+          backgroundColor: "#6357F1",
+          "&:hover": {
+            backgroundColor: "#6357ff",
+          },
+          borderRadius: "20px",
+        },
+      },
+    },
+    MuiStack: {
+      defaultProps: {
+        useFlexGap: true,
+      },
+    },
+  },
+  ptBR,
 });
 
 export default TemaPlanin;
