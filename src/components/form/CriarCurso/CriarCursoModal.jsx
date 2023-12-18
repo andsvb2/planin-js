@@ -13,7 +13,6 @@ import Stack from "@mui/material/Stack";
 import { InputTexto } from "@comp/form/InputTexto";
 import { AutocompleteRHF } from "@comp/form/AutocompleteRHF";
 
-// eslint-disable-next-line react/prop-types
 const CriarCursoModal = ({ show, handleClose }) => {
   const defaultValues = {
     nome: "",
@@ -35,6 +34,7 @@ const CriarCursoModal = ({ show, handleClose }) => {
 
   const [turnos, setTurnos] = useState([]);
   const [campi, setCampi] = useState([]);
+  const [resetCount, setResetCount] = useState(0);
 
   async function getTurnos() {
     let { data: turno, error } = await supabase.from("turno").select("*");
@@ -79,15 +79,14 @@ const CriarCursoModal = ({ show, handleClose }) => {
 
   const onSubmit = (values) => {
     const curso = { ...values };
-
     criarCurso(curso);
-
-    // window.location.reload();
-    // handleClose();
+    window.location.reload();
+    handleClose();
   };
 
   const handleReset = () => {
-    reset(defaultValues);
+    reset({ ...defaultValues, campus_id: "", turno_id: "" });
+    setResetCount(resetCount + 1);
     handleClose();
   };
 
@@ -137,6 +136,7 @@ const CriarCursoModal = ({ show, handleClose }) => {
 
             <AutocompleteRHF
               defaultProps={defaultCampi}
+              key={"campus_id" + resetCount}
               label="Campus"
               control={control}
               name="campus_id"
@@ -148,6 +148,7 @@ const CriarCursoModal = ({ show, handleClose }) => {
 
             <AutocompleteRHF
               defaultProps={defaultTurnos}
+              key={"turno_id" + resetCount}
               label="Turno"
               control={control}
               name="turno_id"
@@ -159,9 +160,7 @@ const CriarCursoModal = ({ show, handleClose }) => {
 
             <Grid style={{ display: "flex", justifyContent: "space-between" }}>
               <Button
-                onClick={() => {
-                  reset(defaultValues);
-                }}
+                onClick={handleReset}
                 variant="outlined"
                 type="reset"
                 style={{
