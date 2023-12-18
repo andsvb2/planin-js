@@ -22,17 +22,6 @@ export async function getTodosCursos() {
   return curso;
 }
 
-// export async function criarCurso(nome, campus_id, turno_id, sigla) {
-//   let { data: curso, error } = await supabase.from(TABLE_NAME).insert([
-//     {
-//       nome: nome,
-//       sigla: sigla,
-//       campus_id: campus_id,
-//       turno_id: turno_id,
-//     },
-//   ]);
-// }
-
 export async function criarCurso(curso) {
   let { data, error } = await supabase.from(TABLE_NAME).insert(curso);
 }
