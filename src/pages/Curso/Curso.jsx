@@ -11,7 +11,8 @@ import supabase from "@services/supabase.js";
 import AvisoSemEntidade from "@ui/AvisoSemEntidade";
 
 const Curso = () => {
-  const [modalCriarOpen, setModalCriarOpen] = useState(false);
+  const [showCursoModal, setShowCursoModal] = useState(false);
+  const [editarCurso, setEditarCurso] = useState(null);
   const [cursos, setCursos] = useState([]);
 
   async function getData() {
@@ -29,6 +30,16 @@ const Curso = () => {
   useEffect(() => {
     getData();
   }, []);
+
+  const handleCardClick = (curso) => {
+    setEditarCurso(curso);
+    setShowCursoModal(true);
+  };
+
+  const handleModalClose = () => {
+    setEditarCurso(null);
+    setShowCursoModal(false);
+  };
 
   return (
     <Grid component="main" rowSpacing={12}>
@@ -70,18 +81,19 @@ const Curso = () => {
                   width: "152px",
                   marginRight: "20px",
                 }}
-                onClick={() => setModalCriarOpen(true)}
+                onClick={() => setShowCursoModal(true)}
               >
                 {" "}
                 + Curso
               </Button>
             </Grid>
           </Grid>
-          <CursoModal
-            show={modalCriarOpen}
-            handleClose={() => setModalCriarOpen(false)}
-          />
           <Box>
+            <CursoModal
+              show={showCursoModal}
+              handleClose={handleModalClose}
+              cursoInicial={editarCurso}
+            />
             {cursos.length > 0 ? (
               cursos.map((curso) => (
                 <CardCurso
@@ -89,6 +101,7 @@ const Curso = () => {
                   instituicao_campus={`${curso.campus.instituicao.sigla} - ${curso.campus.sigla}`}
                   nome_curso={curso.nome}
                   curso_id={curso.id}
+                  onCardClick={() => handleCardClick(curso)}
                 />
               ))
             ) : (

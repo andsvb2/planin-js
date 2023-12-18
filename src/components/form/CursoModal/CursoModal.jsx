@@ -6,18 +6,18 @@ import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Unstable_Grid2";
 import Button from "@mui/material/Button";
 import supabase from "@services/supabase.js";
-import { criarCurso } from "@repository/curso.js";
+import { criarCurso, atualizarCurso, apagarCurso } from "@repository/curso.js";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import { InputTexto } from "@comp/form/InputTexto";
 import { AutocompleteRHF } from "@comp/form/AutocompleteRHF";
 
-const CursoModal = ({ show, handleClose }) => {
+const CursoModal = ({ show, handleClose, cursoInicial }) => {
   const defaultValues = {
-    nome: "",
-    campus_id: "",
-    turno_id: "",
-    sigla: "",
+    nome: cursoInicial ? cursoInicial.nome : "",
+    campus_id: cursoInicial ? cursoInicial.campus_id : "",
+    turno_id: cursoInicial ? cursoInicial.turno_id : "",
+    sigla: cursoInicial ? cursoInicial.sigla : "",
   };
 
   const {
@@ -76,17 +76,32 @@ const CursoModal = ({ show, handleClose }) => {
     getOptionLabel: (option) => option.turno,
   };
 
-  const onSubmit = (values) => {
-    const curso = { ...values };
-    criarCurso(curso);
+  function reloadPageAndCloseModal() {
     window.location.reload();
     handleClose();
+  }
+
+  const onSubmit = (values) => {
+    if (cursoInicial) {
+      atualizarCurso({ ...cursoInicial, ...values }, cursoInicial.id);
+    } else {
+      const curso = { ...values };
+      criarCurso(curso);
+    }
+    reloadPageAndCloseModal();
   };
 
   const handleReset = () => {
     reset({ ...defaultValues, campus_id: "", turno_id: "" });
     setResetCount(resetCount + 1);
     handleClose();
+  };
+
+  const handleDelete = () => {
+    if (cursoInicial) {
+      apagarCurso(cursoInicial.id);
+    }
+    reloadPageAndCloseModal();
   };
 
   return (
@@ -110,7 +125,7 @@ const CursoModal = ({ show, handleClose }) => {
         >
           <Stack spacing={1.5}>
             <Typography variant="h5" style={{ fontFamily: "Lato, sans-serif" }}>
-              Criar curso
+              {cursoInicial ? "Editar curso" : "Criar curso"}
             </Typography>
 
             <InputTexto
@@ -161,6 +176,17 @@ const CursoModal = ({ show, handleClose }) => {
               <Button onClick={handleReset} variant="outlined" type="reset">
                 Cancelar
               </Button>
+              {cursoInicial && (
+                <Button
+                  onClick={handleDelete}
+                  variant="contained"
+                  color="secondary"
+                  sx={{ backgroundColor: "#F15757" }}
+                >
+                  Excluir
+                </Button>
+              )}
+
               <Button variant="contained" type="submit">
                 Salvar
               </Button>
