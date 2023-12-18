@@ -20,12 +20,12 @@ const CardCurso = ({ onCardClick, instituicao_campus, nome_curso }) => {
         >
           <CardContent>
             <Grid container direction="row" alignItems="center">
-              <Grid item xs={4}>
+              <Grid xs={4}>
                 <Typography variant="body1" fontWeight="inline" align="center">
                   {instituicao_campus}
                 </Typography>
               </Grid>
-              <Grid item>
+              <Grid>
                 <Typography variant="h6" textAlign="center" fontWeight="bold">
                   {nome_curso}
                 </Typography>
