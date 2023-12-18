@@ -14,8 +14,18 @@ export async function getCursoById(id) {
   return curso;
 }
 
-export async function getTodosCursos() {
+export async function getCursos() {
   const { data: curso, error } = await supabase.from(TABLE_NAME).select("*");
+  if (error) {
+    throw error;
+  }
+  return curso;
+}
+
+export async function getCursosDadosAdicionais() {
+  let { data: curso, error } = await supabase
+    .from("curso")
+    .select("*, campus(nome, sigla, instituicao(nome, sigla))");
   if (error) {
     throw error;
   }

@@ -5,55 +5,16 @@ import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Unstable_Grid2";
 import Button from "@mui/material/Button";
-import supabase from "@services/supabase.js";
 import { criarCurso, atualizarCurso, apagarCurso } from "@repository/curso.js";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import { InputTexto } from "@comp/form/InputTexto";
 import { AutocompleteRHF } from "@comp/form/AutocompleteRHF";
 
-const CursoModal = ({ show, handleClose, cursoInicial }) => {
-  const [turnos, setTurnos] = useState([]);
-  const [campi, setCampi] = useState([]);
+const CursoModal = ({ show, handleClose, cursoInicial, campi, turnos }) => {
   const [resetCount, setResetCount] = useState(0);
 
-  async function getTurnos() {
-    let { data: turno, error } = await supabase.from("turno").select("*");
-    if (!error) {
-      setTurnos(turno);
-    } else {
-      alert("Erro ao buscar os turnos");
-    }
-  }
-
-  async function getCampi() {
-    let { data: campus, error } = await supabase
-      .from("campus")
-      .select("*, instituicao(sigla)");
-    if (!error) {
-      setCampi(campus);
-    } else {
-      alert("Erro ao buscar os campi");
-    }
-  }
-
-  useEffect(() => {
-    const fetchCampiAndTurnos = async () => {
-      await getTurnos();
-      await getCampi();
-      if (cursoInicial) {
-        reset({
-          nome: cursoInicial.nome,
-          campus_id: campi.find(
-            (campus) => campus.id === cursoInicial.campus_id,
-          ),
-          turno_id: turnos.find((turno) => turno.id === cursoInicial.turno_id),
-          sigla: cursoInicial.sigla,
-        });
-      }
-    };
-    fetchCampiAndTurnos();
-  }, []);
+  console.log(cursoInicial);
 
   const defaultCampi = {
     options: campi,

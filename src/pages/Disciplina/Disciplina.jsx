@@ -80,10 +80,6 @@ const Disciplina = () => {
               </Button>
             </Grid>
           </Grid>
-          <CursoModal
-            show={isModalOpen}
-            handleClose={() => setIsModalOpen(false)}
-          />
           <Box>
             {disciplinas.length > 0 ? (
               disciplinas.map((disciplina) => (
