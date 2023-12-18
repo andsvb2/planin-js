@@ -3,21 +3,22 @@ import MenuItem from "@mui/material/MenuItem";
 import { useForm } from "react-hook-form";
 import Fade from "@mui/material/Fade";
 import Modal from "@mui/material/Modal";
-import TextField from "@mui/material/TextField";
-import Select from "@mui/material/Select";
+import Typography from "@mui/material/Typography";
+import Grid from "@mui/material/Unstable_Grid2";
 import Button from "@mui/material/Button";
 import supabase from "@services/supabase.js";
 import { criarCurso } from "@repository/curso.js";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import { InputTexto } from "@comp/form/InputTexto";
+import { AutocompleteRHF } from "@comp/form/AutocompleteRHF";
 
 // eslint-disable-next-line react/prop-types
 const CriarCursoModal = ({ show, handleClose }) => {
   const defaultValues = {
-    nomeCurso: "",
-    campus: "",
-    turno: "",
+    nome: "",
+    campus_id: "",
+    turno_id: "",
     sigla: "",
   };
 
@@ -32,26 +33,8 @@ const CriarCursoModal = ({ show, handleClose }) => {
     defaultValues,
   });
 
-  const [cursoSelecionado, setCursoSelecionado] = useState("");
-  const [siglaSelecionada, setSiglaSelecionada] = useState("");
-  const [campusSelecionado, setCampusSelecionado] = useState([]);
-  const [turnoSelecionado, setTurnoSelecionado] = useState("");
-  const [instituicaoSelecionada, setInstituicaoSelecionada] = useState("");
-
-  const [cursos, setCursos] = useState([]);
   const [turnos, setTurnos] = useState([]);
-  const [instituicoes, setInstituicoes] = useState([]);
   const [campi, setCampi] = useState([]);
-
-  async function getCursos() {
-    let { data: curso, error } = await supabase.from("curso").select("*");
-
-    if (!error) {
-      setCursos(curso);
-    } else {
-      alert("Erro ao buscar os cursos");
-    }
-  }
 
   async function getTurnos() {
     let { data: turno, error } = await supabase.from("turno").select("*");
@@ -62,21 +45,10 @@ const CriarCursoModal = ({ show, handleClose }) => {
     }
   }
 
-  async function getInstituicoes() {
-    let { data: instituicao, error } = await supabase
-      .from("instituicao")
-      .select("*");
-
-    if (!error) {
-      setInstituicoes(instituicao);
-    } else {
-      alert("Erro ao buscar as instituições");
-    }
-  }
-
   async function getCampi() {
-    let { data: campus, error } = await supabase.from("campus").select("*");
-
+    let { data: campus, error } = await supabase
+      .from("campus")
+      .select("*, instituicao(sigla)");
     if (!error) {
       setCampi(campus);
     } else {
@@ -85,30 +57,33 @@ const CriarCursoModal = ({ show, handleClose }) => {
   }
 
   useEffect(() => {
-    getCursos();
     getTurnos();
-    getInstituicoes();
     getCampi();
   }, []);
 
-  const onSubmit = () => {
-    const curso = {
-      nome: cursoSelecionado,
-      campus_id: campusSelecionado,
-      turno_id: turnoSelecionado,
-      sigla: siglaSelecionada,
-    };
+  const defaultCampi = {
+    options: campi,
+    getOptionLabel: (option) =>
+      option.instituicao.sigla +
+      " - " +
+      option.sigla +
+      " (" +
+      option.cidade +
+      ")",
+  };
+
+  const defaultTurnos = {
+    options: turnos,
+    getOptionLabel: (option) => option.turno,
+  };
+
+  const onSubmit = (values) => {
+    const curso = { ...values };
 
     criarCurso(curso);
 
-    // criarCurso(
-    //   cursoSelecionado,
-    //   campusSelecionado,
-    //   turnoSelecionado,
-    //   siglaSelecionada,
-    // );
-    window.location.reload();
-    handleClose();
+    // window.location.reload();
+    // handleClose();
   };
 
   const handleReset = () => {
@@ -135,27 +110,21 @@ const CriarCursoModal = ({ show, handleClose }) => {
             padding: "20px",
           }}
         >
-          <Stack spacing={1}>
-            <h2
-              style={{
-                fontSize: "24px",
-                color: "#6357F1",
-                marginBottom: "15px",
-                fontFamily: "Lato, sans-serif",
-              }}
-            >
+          <Stack spacing={1.5}>
+            <Typography variant="h5" style={{ fontFamily: "Lato, sans-serif" }}>
               Criar curso
-            </h2>
+            </Typography>
+
             <InputTexto
               autoFocus={true}
               label="Nome do curso"
-              name="nomeCurso"
+              name="nome"
               type="text"
               placeholder="ex. Análise e Desenvolvimento de Sistemas"
               control={control}
               rules={{ required: "O preenchimento deste campo é obrigatório." }}
-              error={!!errors.nomeCurso}
-              helperText={errors.nomeCurso?.message}
+              error={!!errors.nome}
+              helperText={errors.nome?.message}
             />
 
             <InputTexto
@@ -166,36 +135,29 @@ const CriarCursoModal = ({ show, handleClose }) => {
               control={control}
             />
 
-            <Select
+            <AutocompleteRHF
+              defaultProps={defaultCampi}
               label="Campus"
-              value={campusSelecionado}
-              onChange={(e) => setCampusSelecionado(e.target.value)}
-              required
-              fullWidth
-              style={{ marginBottom: "15px", color: "#000000" }}
-              MenuComponent={MenuWithTransition}
-            >
-              {campi.map((campus) => (
-                <MenuItem key={campus.id} value={campus.id}>
-                  {campus.sigla} - {campus.nome}
-                </MenuItem>
-              ))}
-            </Select>
+              control={control}
+              name="campus_id"
+              id="campus_id"
+              rules={{ required: "Selecione um campus." }}
+              error={!!errors.campus_id}
+              helperText={errors.campus_id?.message}
+            />
 
-            <Select
+            <AutocompleteRHF
+              defaultProps={defaultTurnos}
               label="Turno"
-              value={turnoSelecionado}
-              onChange={(e) => setTurnoSelecionado(e.target.value)}
-              fullWidth
-              style={{ marginBottom: "15px", color: "#000000" }}
-            >
-              {turnos.map((turno) => (
-                <MenuItem key={turno.id} value={turno.id}>
-                  {turno.turno}
-                </MenuItem>
-              ))}
-            </Select>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              control={control}
+              name="turno_id"
+              id="turno_id"
+              rules={{ required: "Selecione um turno." }}
+              error={!!errors.turno_id}
+              helperText={errors.turno_id?.message}
+            />
+
+            <Grid style={{ display: "flex", justifyContent: "space-between" }}>
               <Button
                 onClick={() => {
                   reset(defaultValues);
@@ -213,16 +175,12 @@ const CriarCursoModal = ({ show, handleClose }) => {
               <Button variant="contained" type="submit">
                 Salvar
               </Button>
-            </div>
+            </Grid>
           </Stack>
         </Box>
       </Fade>
     </Modal>
   );
 };
-
-const MenuWithTransition = (props) => (
-  <Fade {...props} timeout={{ enter: 300, exit: 0 }} />
-);
 
 export default CriarCursoModal;
