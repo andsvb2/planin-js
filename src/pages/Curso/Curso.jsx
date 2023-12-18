@@ -8,11 +8,10 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import supabase from "@services/supabase.js";
-
-import noDataImage from "@img/attention_5973444.png"; // Importe a imagem necessária
+import AvisoSemEntidade from "@comp/ui/AvisoSemEntidade";
 
 const Curso = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalCriarOpen, setModalCriarOpen] = useState(false);
   const [cursos, setCursos] = useState([]);
 
   async function getData() {
@@ -71,7 +70,7 @@ const Curso = () => {
                   width: "152px",
                   marginRight: "20px",
                 }}
-                onClick={() => setIsModalOpen(true)}
+                onClick={() => setModalCriarOpen(true)}
               >
                 {" "}
                 + Curso
@@ -79,8 +78,8 @@ const Curso = () => {
             </Grid>
           </Grid>
           <CriarCursoModal
-            show={isModalOpen}
-            handleClose={() => setIsModalOpen(false)}
+            show={modalCriarOpen}
+            handleClose={() => setModalCriarOpen(false)}
           />
           <Box>
             {cursos.length > 0 ? (
@@ -93,30 +92,7 @@ const Curso = () => {
                 />
               ))
             ) : (
-              <Box
-                sx={{
-                  border: "2px dashed #ccc",
-                  borderRadius: "8px",
-                  padding: "16px",
-                  backgroundColor: "#F9F9F9",
-                  textAlign: "center",
-                }}
-              >
-                <Box
-                  component="img"
-                  src={noDataImage}
-                  alt="Nenhum dado encontrado"
-                  sx={{ width: 100, height: 100, mb: 2 }}
-                />
-                <Typography
-                  variant={"h4"}
-                  textAlign={"center"}
-                  color={"text.secondary"}
-                  m={2}
-                >
-                  Nenhum curso cadastrado
-                </Typography>
-              </Box>
+              <AvisoSemEntidade mensagem="Nenhum curso cadastrado." />
             )}
           </Box>
         </Stack>

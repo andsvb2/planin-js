@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { CriarCursoModal } from "@comp/form/CriarCurso";
 import { Menu } from "@comp/ui/Menu";
 import Box from "@mui/material/Box";
@@ -7,8 +7,7 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import supabase from "@services/supabase.js";
-
-import noDataImage from "../../assets/img/attention_5973444.png"; // Importe a imagem necessária
+import AvisoSemEntidade from "@comp/ui/AvisoSemEntidade";
 
 const Disciplina = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -115,30 +114,7 @@ const Disciplina = () => {
                 </Box>
               ))
             ) : (
-              <Box
-                sx={{
-                  border: "2px dashed #ccc",
-                  borderRadius: "8px",
-                  padding: "16px",
-                  backgroundColor: "#F9F9F9",
-                  textAlign: "center",
-                }}
-              >
-                <Box
-                  component="img"
-                  src={noDataImage}
-                  alt="Nenhum dado encontrado"
-                  sx={{ width: 100, height: 100, mb: 2 }}
-                />
-                <Typography
-                  variant={"h4"}
-                  textAlign={"center"}
-                  color={"text.secondary"}
-                  m={2}
-                >
-                  Nenhuma disciplina cadastrada
-                </Typography>
-              </Box>
+              <AvisoSemEntidade mensagem="Nenhuma disciplina cadastrada." />
             )}
           </Box>
         </Stack>
