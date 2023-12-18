@@ -16,6 +16,7 @@ export default defineConfig({
       "@utils": "/src/utils",
       "@services": "/src/services",
       "@api": "/src/api",
+      "@repository": "/src/repository",
     },
   },
   plugins: [

@@ -1,19 +1,21 @@
-import React, { useEffect, useState } from "react";
-import { CriarCursoModal } from "@comp/form/CriarCurso";
-import { Menu } from "@comp/ui/Menu";
-import { CardListCurso } from "@comp/ui/Curso";
+import { useEffect, useState } from "react";
+import { CursoModal } from "@form/CursoModal";
+import { Menu } from "@ui/Menu";
+import { CardCurso } from "@ui/CardCurso";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Unstable_Grid2";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import supabase from "@services/supabase.js";
-
-import noDataImage from "../../assets/img/attention_5973444.png"; // Importe a imagem necessária
+import AvisoSemEntidade from "@ui/AvisoSemEntidade";
 
 const Curso = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showCursoModal, setShowCursoModal] = useState(false);
+  const [editarCurso, setEditarCurso] = useState(null);
   const [cursos, setCursos] = useState([]);
+  const [campi, setCampi] = useState([]);
+  const [turnos, setTurnos] = useState([]);
 
   async function getData() {
     let { data: curso, error } = await supabase
@@ -30,6 +32,16 @@ const Curso = () => {
   useEffect(() => {
     getData();
   }, []);
+
+  const handleCardClick = (curso) => {
+    setEditarCurso(curso);
+    setShowCursoModal(true);
+  };
+
+  const handleModalClose = () => {
+    setEditarCurso(null);
+    setShowCursoModal(false);
+  };
 
   return (
     <Grid component="main" rowSpacing={12}>
@@ -57,7 +69,7 @@ const Curso = () => {
           </Box>
           <Grid container spacing={2} sx={{ justifyContent: "space-between" }}>
             <Grid m={1} sx={{ justifyContent: "space-between" }}>
-              <Button variant="outlined" sx={{ ml: 2.5, borderRadius: "20px" }}>
+              <Button variant="outlined" sx={{ ml: 2.5 }}>
                 Ordenar por
               </Button>
               <Button variant="outlined" sx={{ borderRadius: "20px" }}>
@@ -67,63 +79,37 @@ const Curso = () => {
             <Grid m={1}>
               <Button
                 variant="contained"
-                color="primary"
                 style={{
                   width: "152px",
-                  height: "34px",
-                  backgroundColor: "#6357F1",
-                  color: "#fff",
-                  borderRadius: "20px",
                   marginRight: "20px",
                 }}
-                onClick={() => setIsModalOpen(true)}
+                onClick={() => setShowCursoModal(true)}
               >
                 {" "}
                 + Curso
               </Button>
             </Grid>
           </Grid>
-          <CriarCursoModal
-            show={isModalOpen}
-            handleClose={() => setIsModalOpen(false)}
-          />
           <Box>
             {cursos.length > 0 ? (
               cursos.map((curso) => (
-                <CardListCurso
+                <CardCurso
                   key={curso.id}
                   instituicao_campus={`${curso.campus.instituicao.sigla} - ${curso.campus.sigla}`}
                   nome_curso={curso.nome}
-                  id={curso.id}
+                  curso_id={curso.id}
+                  onCardClick={() => handleCardClick(curso)}
                 />
               ))
             ) : (
-              <Box
-                sx={{
-                  border: "2px dashed #ccc",
-                  borderRadius: "8px",
-                  padding: "16px",
-                  backgroundColor: "#F9F9F9",
-                  textAlign: "center",
-                }}
-              >
-                <Box
-                  component="img"
-                  src={noDataImage}
-                  alt="Nenhum dado encontrado"
-                  sx={{ width: 100, height: 100, mb: 2 }}
-                />
-                <Typography
-                  variant={"h4"}
-                  textAlign={"center"}
-                  color={"text.secondary"}
-                  m={2}
-                >
-                  Nenhum curso cadastrado
-                </Typography>
-              </Box>
+              <AvisoSemEntidade mensagem="Nenhum curso cadastrado." />
             )}
           </Box>
+          <CursoModal
+            show={showCursoModal}
+            handleClose={handleModalClose}
+            cursoInicial={editarCurso}
+          />
         </Stack>
       </Grid>
     </Grid>
