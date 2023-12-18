@@ -1,7 +1,5 @@
 import { useController } from "react-hook-form";
 import TextField from "@mui/material/TextField";
-import InputLabel from "@mui/material/InputLabel";
-import Stack from "@mui/material/Stack";
 import Autocomplete from "@mui/material/Autocomplete";
 
 const AutocompleteRHF = ({ defaultProps, control, name, rules, ...rest }) => {
@@ -19,28 +17,22 @@ const AutocompleteRHF = ({ defaultProps, control, name, rules, ...rest }) => {
   const labelText = rest.tag ? rest.tag : rest.label;
 
   return (
-    <Stack gap={3} direction="column">
-      <InputLabel htmlFor={id} variant="outlined">
-        {labelText}
-      </InputLabel>
-
-      <Autocomplete
-        {...defaultProps}
-        name={name}
-        onChange={(event, newValue) => {
-          onChange(newValue ? newValue.id : null);
-        }}
-        control={control}
-        renderInput={(params) => (
-          <TextField
-            {...rest}
-            {...params}
-            helperText={rest.helperText}
-            inputRef={ref}
-          />
-        )}
-      />
-    </Stack>
+    <Autocomplete
+      {...defaultProps}
+      name={name}
+      onChange={(event, newValue) => {
+        onChange(newValue ? newValue.id : null);
+      }}
+      control={control}
+      renderInput={(params) => (
+        <TextField
+          {...rest}
+          {...params}
+          helperText={rest.helperText}
+          inputRef={ref}
+        />
+      )}
+    />
   );
 };
 
