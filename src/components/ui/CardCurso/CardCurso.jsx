@@ -6,7 +6,7 @@ import Grid from "@mui/material/Grid";
 import { CardActionArea } from "@mui/material";
 import EditarCursoModal from "@comp/form/EditarCurso/EditarCursoModal"; // Importe o modal aqui
 
-const CardListCurso = ({ curso_id, instituicao_campus, nome_curso }) => {
+const CardCurso = ({ curso_id, instituicao_campus, nome_curso }) => {
   const [isModalOpen, setModalOpen] = useState(false);
 
   const handleCardClick = () => {
@@ -58,4 +58,4 @@ const CardListCurso = ({ curso_id, instituicao_campus, nome_curso }) => {
   );
 };
 
-export default CardListCurso;
+export default CardCurso;

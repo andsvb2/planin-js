@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { CriarCursoModal } from "@comp/form/CriarCurso";
 import { Menu } from "@comp/ui/Menu";
-import { CardListCurso } from "@comp/ui/Curso";
+import { CardCurso } from "@ui/CardCurso";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Unstable_Grid2";
 import Typography from "@mui/material/Typography";
@@ -90,7 +90,7 @@ const Curso = () => {
           <Box>
             {cursos.length > 0 ? (
               cursos.map((curso) => (
-                <CardListCurso
+                <CardCurso
                   key={curso.id}
                   instituicao_campus={`${curso.campus.instituicao.sigla} - ${curso.campus.sigla}`}
                   nome_curso={curso.nome}
