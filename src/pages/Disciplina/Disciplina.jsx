@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { CriarCursoModal } from "@comp/form/CriarCurso";
 import { Menu } from "@comp/ui/Menu";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Unstable_Grid2";
@@ -81,7 +80,7 @@ const Disciplina = () => {
               </Button>
             </Grid>
           </Grid>
-          <CriarCursoModal
+          <CursoModal
             show={isModalOpen}
             handleClose={() => setIsModalOpen(false)}
           />

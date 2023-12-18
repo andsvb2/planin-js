@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { CriarCursoModal } from "@comp/form/CriarCurso";
-import { Menu } from "@comp/ui/Menu";
+import { CursoModal } from "@form/CursoModal";
+import { Menu } from "@ui/Menu";
 import { CardCurso } from "@ui/CardCurso";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Unstable_Grid2";
@@ -8,7 +8,7 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import supabase from "@services/supabase.js";
-import AvisoSemEntidade from "@comp/ui/AvisoSemEntidade";
+import AvisoSemEntidade from "@ui/AvisoSemEntidade";
 
 const Curso = () => {
   const [modalCriarOpen, setModalCriarOpen] = useState(false);
@@ -77,7 +77,7 @@ const Curso = () => {
               </Button>
             </Grid>
           </Grid>
-          <CriarCursoModal
+          <CursoModal
             show={modalCriarOpen}
             handleClose={() => setModalCriarOpen(false)}
           />

@@ -12,7 +12,7 @@ import Stack from "@mui/material/Stack";
 import { InputTexto } from "@comp/form/InputTexto";
 import { AutocompleteRHF } from "@comp/form/AutocompleteRHF";
 
-const CriarCursoModal = ({ show, handleClose }) => {
+const CursoModal = ({ show, handleClose }) => {
   const defaultValues = {
     nome: "",
     campus_id: "",
@@ -172,4 +172,4 @@ const CriarCursoModal = ({ show, handleClose }) => {
   );
 };
 
-export default CriarCursoModal;
+export default CursoModal;
