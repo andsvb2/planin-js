@@ -8,7 +8,7 @@ import Button from "@mui/material/Button";
 import supabase from "@services/supabase.js";
 
 // eslint-disable-next-line react/prop-types
-const EditarCursoModal = ({ show, handleClose, cursoId }) => {
+const EditarCursoModal = ({ show, handleClose, curso_id }) => {
   const [cursoSelecionado, setCursoSelecionado] = useState("");
   const [siglaSelecionada, setSiglaSelecionada] = useState("");
   const [campusSelecionado, setCampusSelecionado] = useState("");
@@ -24,7 +24,7 @@ const EditarCursoModal = ({ show, handleClose, cursoId }) => {
     let { data: curso, error } = await supabase
       .from("curso")
       .select("*")
-      .eq("id", cursoId);
+      .eq("id", curso_id);
 
     if (!error && curso.length) {
       const cursoData = curso[0];
@@ -79,14 +79,14 @@ const EditarCursoModal = ({ show, handleClose, cursoId }) => {
   }
 
   useEffect(() => {
-    if (cursoId) {
+    if (curso_id) {
       getCurso();
     }
     getCursos();
     getTurnos();
     getInstituicoes();
     getCampi();
-  }, [cursoId]);
+  }, [curso_id]);
 
   async function updateCurso() {
     let { data: curso, error } = await supabase
@@ -97,7 +97,7 @@ const EditarCursoModal = ({ show, handleClose, cursoId }) => {
         campus_id: campusSelecionado,
         turno_id: turnoSelecionado,
       })
-      .eq("id", cursoId);
+      .eq("id", curso_id);
 
     if (!error) {
       alert("Curso atualizado com sucesso!");

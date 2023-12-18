@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
@@ -6,11 +6,7 @@ import Grid from "@mui/material/Grid";
 import { CardActionArea } from "@mui/material";
 import EditarCursoModal from "@comp/form/EditarCurso/EditarCursoModal"; // Importe o modal aqui
 
-export default function CardListCurso({
-  cursoId,
-  instituicao_campus,
-  nome_curso,
-}) {
+const CardListCurso = ({ curso_id, instituicao_campus, nome_curso }) => {
   const [isModalOpen, setModalOpen] = useState(false);
 
   const handleCardClick = () => {
@@ -56,8 +52,10 @@ export default function CardListCurso({
       <EditarCursoModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
-        cursoId={cursoId}
+        curso_id={curso_id}
       />
     </>
   );
-}
+};
+
+export default CardListCurso;

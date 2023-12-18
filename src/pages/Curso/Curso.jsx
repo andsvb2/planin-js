@@ -94,7 +94,7 @@ const Curso = () => {
                   key={curso.id}
                   instituicao_campus={`${curso.campus.instituicao.sigla} - ${curso.campus.sigla}`}
                   nome_curso={curso.nome}
-                  id={curso.id}
+                  curso_id={curso.id}
                 />
               ))
             ) : (
