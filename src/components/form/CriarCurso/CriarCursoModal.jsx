@@ -1,14 +1,37 @@
 import { useEffect, useState } from "react";
 import MenuItem from "@mui/material/MenuItem";
+import { useForm } from "react-hook-form";
 import Fade from "@mui/material/Fade";
 import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
 import Select from "@mui/material/Select";
 import Button from "@mui/material/Button";
 import supabase from "@services/supabase.js";
+import { criarCurso } from "@repository/curso.js";
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import { InputTexto } from "@comp/form/InputTexto";
 
 // eslint-disable-next-line react/prop-types
 const CriarCursoModal = ({ show, handleClose }) => {
+  const defaultValues = {
+    nomeCurso: "",
+    campus: "",
+    turno: "",
+    sigla: "",
+  };
+
+  const {
+    watch,
+    control,
+    formState: { errors },
+    handleSubmit,
+    getValues,
+    reset,
+  } = useForm({
+    defaultValues,
+  });
+
   const [cursoSelecionado, setCursoSelecionado] = useState("");
   const [siglaSelecionada, setSiglaSelecionada] = useState("");
   const [campusSelecionado, setCampusSelecionado] = useState([]);
@@ -68,34 +91,38 @@ const CriarCursoModal = ({ show, handleClose }) => {
     getCampi();
   }, []);
 
-  async function saveCurso() {
-    let { data: curso, error } = await supabase.from("curso").insert([
-      {
-        nome: cursoSelecionado,
-        campus_id: campusSelecionado,
-        turno_id: turnoSelecionado,
-      },
-    ]);
-  }
+  const onSubmit = () => {
+    const curso = {
+      nome: cursoSelecionado,
+      campus_id: campusSelecionado,
+      turno_id: turnoSelecionado,
+      sigla: siglaSelecionada,
+    };
 
-  const handleSaveCurso = () => {
-    saveCurso();
+    criarCurso(curso);
+
+    // criarCurso(
+    //   cursoSelecionado,
+    //   campusSelecionado,
+    //   turnoSelecionado,
+    //   siglaSelecionada,
+    // );
     window.location.reload();
     handleClose();
   };
 
-  const handleCancelCurso = () => {
-    setCursoSelecionado("");
-    setCampusSelecionado("");
-    setTurnoSelecionado("");
-    setInstituicaoSelecionada("");
+  const handleReset = () => {
+    reset(defaultValues);
     handleClose();
   };
 
   return (
     <Modal open={show} onClose={handleClose}>
       <Fade in={show}>
-        <div
+        <Box
+          component="form"
+          onSubmit={handleSubmit(onSubmit)}
+          className="modal-criar-curso"
           style={{
             position: "absolute",
             top: "50%",
@@ -108,85 +135,87 @@ const CriarCursoModal = ({ show, handleClose }) => {
             padding: "20px",
           }}
         >
-          <h2
-            style={{
-              fontSize: "24px",
-              color: "#6357F1",
-              marginBottom: "15px",
-              fontFamily: "Lato, sans-serif",
-            }}
-          >
-            Criar curso
-          </h2>
-          <TextField
-            label="Nome do curso"
-            value={cursoSelecionado}
-            onChange={(e) => setCursoSelecionado(e.target.value)}
-            required
-            fullWidth
-            style={{ marginBottom: "15px" }}
-          />
-
-          <TextField
-            label="Sigla (opcional)"
-            value={siglaSelecionada}
-            onChange={(e) => setSiglaSelecionada(e.target.value)}
-            required
-            fullWidth
-            style={{ marginBottom: "15px" }}
-          />
-
-          <Select
-            label="Campus"
-            value={campusSelecionado}
-            onChange={(e) => setCampusSelecionado(e.target.value)}
-            required
-            fullWidth
-            style={{ marginBottom: "15px", color: "#000000" }}
-            MenuComponent={MenuWithTransition}
-          >
-            {campi.map((campus) => (
-              <MenuItem key={campus.id} value={campus.id}>
-                {campus.sigla} - {campus.nome}
-              </MenuItem>
-            ))}
-          </Select>
-
-          <Select
-            label="Turno"
-            value={turnoSelecionado}
-            onChange={(e) => setTurnoSelecionado(e.target.value)}
-            fullWidth
-            style={{ marginBottom: "15px", color: "#000000" }}
-          >
-            {turnos.map((turno) => (
-              <MenuItem key={turno.id} value={turno.id}>
-                {turno.turno}
-              </MenuItem>
-            ))}
-          </Select>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <Button
-              onClick={handleCancelCurso}
-              variant="outlined"
-              style={{ color: "#6357F1", borderRadius: "20px" }}
-            >
-              Cancelar
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleSaveCurso}
+          <Stack spacing={1}>
+            <h2
               style={{
-                backgroundColor: "#6357F1",
-                color: "#fff",
-                borderRadius: "20px",
+                fontSize: "24px",
+                color: "#6357F1",
+                marginBottom: "15px",
+                fontFamily: "Lato, sans-serif",
               }}
             >
-              Salvar
-            </Button>
-          </div>
-        </div>
+              Criar curso
+            </h2>
+            <InputTexto
+              autoFocus={true}
+              label="Nome do curso"
+              name="nomeCurso"
+              type="text"
+              placeholder="ex. Análise e Desenvolvimento de Sistemas"
+              control={control}
+              rules={{ required: "O preenchimento deste campo é obrigatório." }}
+              error={!!errors.nomeCurso}
+              helperText={errors.nomeCurso?.message}
+            />
+
+            <InputTexto
+              label="Sigla (opcional)"
+              name="sigla"
+              type="text"
+              placeholder="ex. ADS"
+              control={control}
+            />
+
+            <Select
+              label="Campus"
+              value={campusSelecionado}
+              onChange={(e) => setCampusSelecionado(e.target.value)}
+              required
+              fullWidth
+              style={{ marginBottom: "15px", color: "#000000" }}
+              MenuComponent={MenuWithTransition}
+            >
+              {campi.map((campus) => (
+                <MenuItem key={campus.id} value={campus.id}>
+                  {campus.sigla} - {campus.nome}
+                </MenuItem>
+              ))}
+            </Select>
+
+            <Select
+              label="Turno"
+              value={turnoSelecionado}
+              onChange={(e) => setTurnoSelecionado(e.target.value)}
+              fullWidth
+              style={{ marginBottom: "15px", color: "#000000" }}
+            >
+              {turnos.map((turno) => (
+                <MenuItem key={turno.id} value={turno.id}>
+                  {turno.turno}
+                </MenuItem>
+              ))}
+            </Select>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <Button
+                onClick={() => {
+                  reset(defaultValues);
+                }}
+                variant="outlined"
+                type="reset"
+                style={{
+                  color: "#6357F1",
+                  backgroundColor: "#ffff",
+                  borderRadius: "20px",
+                }}
+              >
+                Cancelar
+              </Button>
+              <Button variant="contained" type="submit">
+                Salvar
+              </Button>
+            </div>
+          </Stack>
+        </Box>
       </Fade>
     </Modal>
   );
