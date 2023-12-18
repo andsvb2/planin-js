@@ -13,24 +13,6 @@ import { InputTexto } from "@comp/form/InputTexto";
 import { AutocompleteRHF } from "@comp/form/AutocompleteRHF";
 
 const CursoModal = ({ show, handleClose, cursoInicial }) => {
-  const defaultValues = {
-    nome: cursoInicial ? cursoInicial.nome : "",
-    campus_id: cursoInicial ? cursoInicial.campus_id : "",
-    turno_id: cursoInicial ? cursoInicial.turno_id : "",
-    sigla: cursoInicial ? cursoInicial.sigla : "",
-  };
-
-  const {
-    watch,
-    control,
-    formState: { errors },
-    handleSubmit,
-    getValues,
-    reset,
-  } = useForm({
-    defaultValues,
-  });
-
   const [turnos, setTurnos] = useState([]);
   const [campi, setCampi] = useState([]);
   const [resetCount, setResetCount] = useState(0);
@@ -56,8 +38,21 @@ const CursoModal = ({ show, handleClose, cursoInicial }) => {
   }
 
   useEffect(() => {
-    getTurnos();
-    getCampi();
+    const fetchCampiAndTurnos = async () => {
+      await getTurnos();
+      await getCampi();
+      if (cursoInicial) {
+        reset({
+          nome: cursoInicial.nome,
+          campus_id: campi.find(
+            (campus) => campus.id === cursoInicial.campus_id,
+          ),
+          turno_id: turnos.find((turno) => turno.id === cursoInicial.turno_id),
+          sigla: cursoInicial.sigla,
+        });
+      }
+    };
+    fetchCampiAndTurnos();
   }, []);
 
   const defaultCampi = {
@@ -75,6 +70,30 @@ const CursoModal = ({ show, handleClose, cursoInicial }) => {
     options: turnos,
     getOptionLabel: (option) => option.turno,
   };
+
+  const defaultValues = {
+    nome: cursoInicial ? cursoInicial.nome : "",
+    campus_id: cursoInicial
+      ? campi.find((campus) => campus.id === cursoInicial.campus_id)
+      : "",
+    turno_id: cursoInicial
+      ? turnos.find((turno) => turno.id === cursoInicial.turno_id)
+      : "",
+    sigla: cursoInicial ? cursoInicial.sigla : "",
+  };
+
+  console.log(cursoInicial);
+
+  const {
+    watch,
+    control,
+    formState: { errors },
+    handleSubmit,
+    getValues,
+    reset,
+  } = useForm({
+    defaultValues,
+  });
 
   function reloadPageAndCloseModal() {
     window.location.reload();
@@ -158,6 +177,12 @@ const CursoModal = ({ show, handleClose, cursoInicial }) => {
               rules={{ required: "Selecione um campus." }}
               error={!!errors.campus_id}
               helperText={errors.campus_id?.message}
+              value={
+                cursoInicial
+                  ? campi.find((campus) => campus.id === cursoInicial.campus_id)
+                  : null
+              }
+              defaultValue={campi[0]}
             />
 
             <AutocompleteRHF

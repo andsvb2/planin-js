@@ -14,6 +14,8 @@ const Curso = () => {
   const [showCursoModal, setShowCursoModal] = useState(false);
   const [editarCurso, setEditarCurso] = useState(null);
   const [cursos, setCursos] = useState([]);
+  const [campi, setCampi] = useState([]);
+  const [turnos, setTurnos] = useState([]);
 
   async function getData() {
     let { data: curso, error } = await supabase
@@ -89,11 +91,6 @@ const Curso = () => {
             </Grid>
           </Grid>
           <Box>
-            <CursoModal
-              show={showCursoModal}
-              handleClose={handleModalClose}
-              cursoInicial={editarCurso}
-            />
             {cursos.length > 0 ? (
               cursos.map((curso) => (
                 <CardCurso
@@ -108,6 +105,11 @@ const Curso = () => {
               <AvisoSemEntidade mensagem="Nenhum curso cadastrado." />
             )}
           </Box>
+          <CursoModal
+            show={showCursoModal}
+            handleClose={handleModalClose}
+            cursoInicial={editarCurso}
+          />
         </Stack>
       </Grid>
     </Grid>
