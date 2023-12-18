@@ -63,10 +63,7 @@ const Calendario = () => {
               </Button>
             </Grid>
           </Grid>
-          <CursoModal
-            show={isModalOpen}
-            handleClose={() => setIsModalOpen(false)}
-          />
+
           <Box>
             {calendarios.length > 0 ? (
               calendarios.map((calendario) => (
