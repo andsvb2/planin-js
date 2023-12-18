@@ -159,16 +159,7 @@ const CriarCursoModal = ({ show, handleClose }) => {
             />
 
             <Grid style={{ display: "flex", justifyContent: "space-between" }}>
-              <Button
-                onClick={handleReset}
-                variant="outlined"
-                type="reset"
-                style={{
-                  color: "#6357F1",
-                  backgroundColor: "#ffff",
-                  borderRadius: "20px",
-                }}
-              >
+              <Button onClick={handleReset} variant="outlined" type="reset">
                 Cancelar
               </Button>
               <Button variant="contained" type="submit">

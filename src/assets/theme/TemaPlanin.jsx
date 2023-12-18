@@ -1,5 +1,4 @@
 import { createTheme } from "@mui/material/styles";
-import { blue } from "@mui/material/colors";
 import { ptBR } from "@mui/material/locale";
 
 const TemaPlanin = createTheme({
@@ -31,12 +30,14 @@ const TemaPlanin = createTheme({
   components: {
     MuiButton: {
       styleOverrides: {
-        root: {
-          color: "#fff",
+        contained: {
           backgroundColor: "#6357F1",
-          "&:hover": {
-            backgroundColor: "#6357ff",
-          },
+          color: "#fff",
+        },
+        outlined: {
+          color: "#6357F1",
+        },
+        root: {
           borderRadius: "20px",
         },
       },

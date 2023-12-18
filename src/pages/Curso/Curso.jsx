@@ -57,7 +57,7 @@ const Curso = () => {
           </Box>
           <Grid container spacing={2} sx={{ justifyContent: "space-between" }}>
             <Grid m={1} sx={{ justifyContent: "space-between" }}>
-              <Button variant="outlined" sx={{ ml: 2.5, borderRadius: "20px" }}>
+              <Button variant="outlined" sx={{ ml: 2.5 }}>
                 Ordenar por
               </Button>
               <Button variant="outlined" sx={{ borderRadius: "20px" }}>
@@ -67,13 +67,8 @@ const Curso = () => {
             <Grid m={1}>
               <Button
                 variant="contained"
-                color="primary"
                 style={{
                   width: "152px",
-                  height: "34px",
-                  backgroundColor: "#6357F1",
-                  color: "#fff",
-                  borderRadius: "20px",
                   marginRight: "20px",
                 }}
                 onClick={() => setIsModalOpen(true)}
