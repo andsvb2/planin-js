@@ -7,8 +7,10 @@ import Grid from "@mui/material/Unstable_Grid2";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
-import supabase from "@services/supabase.js";
 import AvisoSemEntidade from "@ui/AvisoSemEntidade";
+import { getCursosDadosAdicionais } from "@repository/curso.js";
+import { getCampiInstituicao } from "@repository/campus.js";
+import { getTurnos } from "@repository/turno.js";
 
 const Curso = () => {
   const [showCursoModal, setShowCursoModal] = useState(false);
@@ -17,20 +19,16 @@ const Curso = () => {
   const [campi, setCampi] = useState([]);
   const [turnos, setTurnos] = useState([]);
 
-  async function getData() {
-    let { data: curso, error } = await supabase
-      .from("curso")
-      .select("*, campus(nome, sigla, instituicao(nome, sigla))");
-
-    if (!error) {
-      setCursos(curso);
-    } else {
-      alert("Erro ao buscar os cursos");
-    }
-  }
-
   useEffect(() => {
-    getData();
+    const fetchCampiAndTurnos = async () => {
+      const fetchedCursos = await getCursosDadosAdicionais();
+      const fetchedTurnos = await getTurnos();
+      const fetchedCampi = await getCampiInstituicao();
+      setCursos(fetchedCursos);
+      setTurnos(fetchedTurnos);
+      setCampi(fetchedCampi);
+    };
+    fetchCampiAndTurnos();
   }, []);
 
   const handleCardClick = (curso) => {
@@ -109,6 +107,8 @@ const Curso = () => {
             show={showCursoModal}
             handleClose={handleModalClose}
             cursoInicial={editarCurso}
+            campi={campi}
+            turnos={turnos}
           />
         </Stack>
       </Grid>
