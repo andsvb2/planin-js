@@ -9,7 +9,7 @@ import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import supabase from "@services/supabase.js";
 
-import noDataImage from "../../assets/img/attention_5973444.png"; // Importe a imagem necessária
+import noDataImage from "@img/attention_5973444.png"; // Importe a imagem necessária
 
 const Curso = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
