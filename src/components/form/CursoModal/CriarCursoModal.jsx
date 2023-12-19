@@ -5,32 +5,18 @@ import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Unstable_Grid2";
 import Button from "@mui/material/Button";
-import { criarCurso, atualizarCurso, apagarCurso } from "@repository/curso.js";
+import { criarCurso } from "@repository/curso.js";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import { InputTexto } from "@comp/form/InputTexto";
 import { AutocompleteRHF } from "@comp/form/AutocompleteRHF";
 
-const CriarCursoModal = ({
-  show,
-  handleClose,
-  cursoInicial,
-  campi,
-  turnos,
-}) => {
+const CriarCursoModal = ({ show, handleClose, campi, turnos }) => {
   const [resetCount, setResetCount] = useState(0);
-
-  console.log(cursoInicial);
 
   const defaultCampi = {
     options: campi,
-    getOptionLabel: (option) =>
-      option.instituicao.sigla +
-      " - " +
-      option.sigla +
-      " (" +
-      option.cidade +
-      ")",
+    getOptionLabel: (option) => option.nome,
   };
 
   const defaultTurnos = {
@@ -39,14 +25,10 @@ const CriarCursoModal = ({
   };
 
   const defaultValues = {
-    nome: cursoInicial?.nome || "",
-    campus_id: cursoInicial
-      ? campi.find((campus) => campus.id === cursoInicial.campus_id)
-      : null,
-    turno_id: cursoInicial
-      ? turnos.find((turno) => turno.id === cursoInicial.turno_id)
-      : null,
-    sigla: cursoInicial?.sigla || "",
+    nome: "",
+    campus_id: "",
+    turno_id: "",
+    sigla: "",
   };
 
   const {
@@ -65,31 +47,17 @@ const CriarCursoModal = ({
     handleClose();
   }
 
-  const onSubmit = (values) => {
-    if (cursoInicial) {
-      atualizarCurso({ ...cursoInicial, ...values }, cursoInicial.id);
-    } else {
-      const curso = { ...values };
-      criarCurso(curso);
-    }
+  const onSubmit = async (values) => {
+    const curso = { ...values };
+    console.log(curso);
+    await criarCurso(curso);
     reloadPageAndCloseModal();
-  };
-
-  const handleModalClose = () => {
-    reset(defaultValues);
   };
 
   const handleReset = () => {
     reset(defaultValues);
     setResetCount(resetCount + 1);
     handleClose();
-  };
-
-  const handleDelete = () => {
-    if (cursoInicial) {
-      apagarCurso(cursoInicial.id);
-    }
-    reloadPageAndCloseModal();
   };
 
   useEffect(() => {
@@ -99,7 +67,7 @@ const CriarCursoModal = ({
   }, []);
 
   return (
-    <Modal open={show} onClose={handleModalClose}>
+    <Modal open={show} onClose={handleClose}>
       <Fade in={show}>
         <Box
           component="form"
@@ -119,7 +87,7 @@ const CriarCursoModal = ({
         >
           <Stack spacing={1.5}>
             <Typography variant="h5" style={{ fontFamily: "Lato, sans-serif" }}>
-              {cursoInicial ? "Editar curso" : "Criar curso"}
+              Criar curso
             </Typography>
 
             <InputTexto
@@ -152,12 +120,6 @@ const CriarCursoModal = ({
               rules={{ required: "Selecione um campus." }}
               error={!!errors.campus_id}
               helperText={errors.campus_id?.message}
-              value={
-                cursoInicial
-                  ? campi.find((campus) => campus.id === cursoInicial.campus_id)
-                  : null
-              }
-              defaultValue={campi[0]}
             />
 
             <AutocompleteRHF
@@ -176,16 +138,6 @@ const CriarCursoModal = ({
               <Button onClick={handleReset} variant="outlined" type="reset">
                 Cancelar
               </Button>
-              {cursoInicial && (
-                <Button
-                  onClick={handleDelete}
-                  variant="contained"
-                  color="secondary"
-                  sx={{ backgroundColor: "#F15757" }}
-                >
-                  Excluir
-                </Button>
-              )}
 
               <Button variant="contained" type="submit">
                 Salvar

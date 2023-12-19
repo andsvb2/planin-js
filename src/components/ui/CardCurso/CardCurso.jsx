@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Unstable_Grid2";
 import CardActionArea from "@mui/material/CardActionArea";
 
-const CardCurso = ({ onCardClick, instituicao_campus, nome_curso }) => {
+const CardCurso = ({ onCardClick, campus, nome_curso }) => {
   return (
     <>
       <CardActionArea onClick={onCardClick}>
@@ -22,7 +22,7 @@ const CardCurso = ({ onCardClick, instituicao_campus, nome_curso }) => {
             <Grid container direction="row" alignItems="center">
               <Grid xs={4}>
                 <Typography variant="body1" fontWeight="inline" align="center">
-                  {instituicao_campus}
+                  {campus}
                 </Typography>
               </Grid>
               <Grid>

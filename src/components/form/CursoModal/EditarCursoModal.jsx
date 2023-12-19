@@ -8,48 +8,19 @@ import { apagarCurso, atualizarCurso, criarCurso } from "@repository/curso.js";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import { InputTexto } from "@comp/form/InputTexto";
-import { AutocompleteRHF } from "@comp/form/AutocompleteRHF";
 
-const EditarCursoModal = ({
-  show,
-  handleClose,
-  cursoInicial,
-  campi,
-  turnos,
-  ...rest
-}) => {
-  const [resetCount, setResetCount] = useState(0);
-
-  console.log(cursoInicial);
-  console.log(campi);
-  console.log(turnos);
-  console.log(rest);
-
-  const defaultCampi = {
-    options: campi,
-    getOptionLabel: (option) => option.nome,
+const EditarCursoModal = ({ show, handleClose, curso, ...rest }) => {
+  const defaultValues = {
+    id: curso ? curso.id : "",
+    nome: curso ? curso.nome : "",
+    sigla: curso ? curso.sigla : "",
+    campus_id: curso ? curso.campus_id : "",
+    turno_id: curso ? curso.turno_id : "",
   };
 
-  const defaultTurnos = {
-    options: turnos,
-    getOptionLabel: (option) => option.turno,
-  };
+  console.log("ECM -> defaultValues: ", defaultValues);
 
-  const defaultValues = cursoInicial
-    ? {
-        nome: cursoInicial.nome,
-        campus_id: cursoInicial.campus_id,
-        turno_id: cursoInicial.campus_id,
-        sigla: cursoInicial.sigla,
-      }
-    : {
-        nome: "",
-        campus_id: "",
-        turno_id: "",
-        sigla: "",
-      };
-
-  console.log("defaultValues: ", defaultValues);
+  const [name, setName] = useState(defaultValues.nome);
 
   const {
     watch,
@@ -68,15 +39,24 @@ const EditarCursoModal = ({
   }
 
   const onSubmit = async (values) => {
-    if (cursoInicial) {
-      const cursoAtualizado = { id: cursoInicial.id, ...values };
-      console.log(cursoAtualizado);
+    if (curso) {
+      // Create a new object based on the `curso` object.
+      const cursoAtualizado = { ...curso };
+
+      // Iterate over `values`
+      Object.entries(values).forEach(([key, value]) => {
+        // If `value` is not empty, add it to 'cursoAtualizado'
+        if (value) {
+          cursoAtualizado[key] = value;
+        }
+      });
+
+      console.log("cursoAtualizado: ", cursoAtualizado);
       await atualizarCurso(cursoAtualizado);
     } else {
       const curso = { ...values };
       await criarCurso(curso);
     }
-    // reloadPageAndCloseModal();
   };
 
   const handleModalClose = () => {
@@ -84,22 +64,22 @@ const EditarCursoModal = ({
   };
 
   const handleReset = () => {
-    reset(defaultValues);
-    setResetCount(resetCount + 1);
+    reset({
+      id: "",
+      nome: "",
+      sigla: "",
+      turno_id: "",
+      campus_id: "",
+    });
     handleClose();
   };
 
-  const handleDelete = () => {
-    if (cursoInicial) {
-      apagarCurso(cursoInicial.id);
+  const handleDelete = async () => {
+    if (curso) {
+      await apagarCurso(curso.id);
     }
-    // reloadPageAndCloseModal();
+    reloadPageAndCloseModal();
   };
-  const watchAllFields = watch();
-
-  useEffect(() => {
-    console.log(watchAllFields);
-  }, [watchAllFields]);
 
   return (
     <Modal open={show} onClose={handleModalClose}>
@@ -121,7 +101,7 @@ const EditarCursoModal = ({
       >
         <Stack spacing={1.5}>
           <Typography variant="h5" style={{ fontFamily: "Lato, sans-serif" }}>
-            {cursoInicial ? "Editar curso" : "Criar curso"}
+            {curso ? "Editar curso" : "Criar curso"}
           </Typography>
 
           <InputTexto
@@ -129,65 +109,32 @@ const EditarCursoModal = ({
             label="Nome do curso"
             name="nome"
             type="text"
-            placeholder="ex. Análise e Desenvolvimento de Sistemas"
             control={control}
             rules={{ required: "O preenchimento deste campo é obrigatório." }}
             error={!!errors.nome}
             helperText={errors.nome?.message}
+            defaultValue={name}
           />
 
           <InputTexto
             label="Sigla (opcional)"
             name="sigla"
             type="text"
-            placeholder="ex. ADS"
             control={control}
-          />
-
-          <AutocompleteRHF
-            defaultProps={defaultCampi}
-            key={"campus_id" + resetCount}
-            label="Campus"
-            control={control}
-            name="campus_id"
-            id="campus_id"
-            rules={{ required: "Selecione um campus." }}
-            error={!!errors.campus_id}
-            helperText={errors.campus_id?.message}
-            value={
-              cursoInicial
-                ? campi.find((campus) => campus.id === cursoInicial.campus_id)
-                    ?.id
-                : null
-            }
-          />
-
-          <AutocompleteRHF
-            defaultProps={defaultTurnos}
-            key={"turno_id" + resetCount}
-            label="Turno"
-            control={control}
-            name="turno_id"
-            id="turno_id"
-            rules={{ required: "Selecione um turno." }}
-            error={!!errors.turno_id}
-            helperText={errors.turno_id?.message}
           />
 
           <Grid style={{ display: "flex", justifyContent: "space-between" }}>
             <Button onClick={handleReset} variant="outlined" type="reset">
               Cancelar
             </Button>
-            {cursoInicial && (
-              <Button
-                onClick={handleDelete}
-                variant="contained"
-                color="secondary"
-                sx={{ backgroundColor: "#F15757" }}
-              >
-                Excluir
-              </Button>
-            )}
+            <Button
+              onClick={handleDelete}
+              variant="contained"
+              color="secondary"
+              sx={{ backgroundColor: "#F15757" }}
+            >
+              Excluir
+            </Button>
 
             <Button variant="contained" type="submit">
               Salvar
