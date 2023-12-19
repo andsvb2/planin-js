@@ -9,14 +9,16 @@ import supabase from "@services/supabase.js";
 
 const Login = () => {
   const GOOGLE_DATA_CLIENT_ID = import.meta.env.VITE_GOOGLE_DATA_CLIENT_ID;
+
   async function handleSignInWithGoogle(response) {
-    // eslint-disable-next-line no-unused-vars
-    const { data, error } = await supabase.auth.signInWithIdToken({
-      provider: "google",
-      token: response.credential,
-      nonce: "NONCE", // must be the same one as provided in data-nonce (if any)
-    });
-    console.log("handleSignInMethod", data, error);
+    const { data, error } = await supabase.auth.signInWithIdToken(
+      {
+        provider: "google",
+        token: response.credential,
+        nonce: "", // must be the same one as provided in data-nonce (if any)
+      },
+      { redirectTo: "https://planin.vercel.app/cursos" },
+    );
   }
 
   window.onload = function () {
@@ -28,7 +30,7 @@ const Login = () => {
       document.getElementById("buttonDiv"),
       { theme: "outline", size: "large", shape: "pill" }, // customization attributes
     );
-    // google.accounts.id.prompt(); // also display the One Tap dialog
+    google.accounts.id.prompt(); // also display the One Tap dialog
   };
 
   return (
