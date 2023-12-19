@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { CursoModal } from "@form/CursoModal";
+import { useEffect, useState, useCallback } from "react";
+import { EditarCursoModal } from "@form/CursoModal";
 import { Menu } from "@ui/Menu";
 import { CardCurso } from "@ui/CardCurso";
 import Box from "@mui/material/Box";
@@ -9,36 +9,55 @@ import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import AvisoSemEntidade from "@ui/AvisoSemEntidade";
 import { getCursosDadosAdicionais } from "@repository/curso.js";
-import { getCampiInstituicao } from "@repository/campus.js";
+import { getCampi } from "@repository/campus.js";
 import { getTurnos } from "@repository/turno.js";
 
 const Curso = () => {
   const [showCursoModal, setShowCursoModal] = useState(false);
-  const [editarCurso, setEditarCurso] = useState(null);
   const [cursos, setCursos] = useState([]);
   const [campi, setCampi] = useState([]);
   const [turnos, setTurnos] = useState([]);
+  const [cursoSelecionado, setCursoSelecionado] = useState(null);
 
-  useEffect(() => {
-    const fetchCampiAndTurnos = async () => {
-      const fetchedCursos = await getCursosDadosAdicionais();
-      const fetchedTurnos = await getTurnos();
-      const fetchedCampi = await getCampiInstituicao();
-      setCursos(fetchedCursos);
-      setTurnos(fetchedTurnos);
-      setCampi(fetchedCampi);
-    };
-    fetchCampiAndTurnos();
+  const fetchCursos = useCallback(async () => {
+    const fetchedCursos = await getCursosDadosAdicionais();
+    setCursos(fetchedCursos);
+    await getCampiAndTurnos();
   }, []);
 
-  const handleCardClick = (curso) => {
-    setEditarCurso(curso);
+  useEffect(() => {
+    fetchCursos();
+  }, [fetchCursos]);
+
+  const handleEditClick = async (curso) => {
+    console.log(curso);
+    setCursoSelecionado(null);
+    await getCampiAndTurnos();
+    setCursoSelecionado(curso);
     setShowCursoModal(true);
   };
 
-  const handleModalClose = () => {
-    setEditarCurso(null);
+  const handleCreateClick = () => {
+    setCursoSelecionado(null);
+    setShowCursoModal(true);
+  };
+
+  const handleModalClose = async () => {
+    setCursoSelecionado(null);
     setShowCursoModal(false);
+    await fetchCursos();
+  };
+
+  const getCampiAndTurnos = async () => {
+    try {
+      const fetchedTurnos = await getTurnos();
+      const fetchedCampi = await getCampi();
+      console.log(fetchedCampi);
+      setTurnos(fetchedTurnos);
+      setCampi(fetchedCampi);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -81,7 +100,7 @@ const Curso = () => {
                   width: "152px",
                   marginRight: "20px",
                 }}
-                onClick={() => setShowCursoModal(true)}
+                onClick={handleCreateClick}
               >
                 {" "}
                 + Curso
@@ -96,17 +115,17 @@ const Curso = () => {
                   instituicao_campus={`${curso.campus.instituicao.sigla} - ${curso.campus.sigla}`}
                   nome_curso={curso.nome}
                   curso_id={curso.id}
-                  onCardClick={() => handleCardClick(curso)}
+                  onCardClick={() => handleEditClick(curso)}
                 />
               ))
             ) : (
               <AvisoSemEntidade mensagem="Nenhum curso cadastrado." />
             )}
           </Box>
-          <CursoModal
+          <EditarCursoModal
             show={showCursoModal}
             handleClose={handleModalClose}
-            cursoInicial={editarCurso}
+            cursoInicial={cursoSelecionado}
             campi={campi}
             turnos={turnos}
           />

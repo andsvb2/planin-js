@@ -11,7 +11,13 @@ import Stack from "@mui/material/Stack";
 import { InputTexto } from "@comp/form/InputTexto";
 import { AutocompleteRHF } from "@comp/form/AutocompleteRHF";
 
-const CursoModal = ({ show, handleClose, cursoInicial, campi, turnos }) => {
+const CriarCursoModal = ({
+  show,
+  handleClose,
+  cursoInicial,
+  campi,
+  turnos,
+}) => {
   const [resetCount, setResetCount] = useState(0);
 
   console.log(cursoInicial);
@@ -33,17 +39,15 @@ const CursoModal = ({ show, handleClose, cursoInicial, campi, turnos }) => {
   };
 
   const defaultValues = {
-    nome: cursoInicial ? cursoInicial.nome : "",
+    nome: cursoInicial?.nome || "",
     campus_id: cursoInicial
       ? campi.find((campus) => campus.id === cursoInicial.campus_id)
-      : "",
+      : null,
     turno_id: cursoInicial
       ? turnos.find((turno) => turno.id === cursoInicial.turno_id)
-      : "",
-    sigla: cursoInicial ? cursoInicial.sigla : "",
+      : null,
+    sigla: cursoInicial?.sigla || "",
   };
-
-  console.log(cursoInicial);
 
   const {
     watch,
@@ -71,8 +75,12 @@ const CursoModal = ({ show, handleClose, cursoInicial, campi, turnos }) => {
     reloadPageAndCloseModal();
   };
 
+  const handleModalClose = () => {
+    reset(defaultValues);
+  };
+
   const handleReset = () => {
-    reset({ ...defaultValues, campus_id: "", turno_id: "" });
+    reset(defaultValues);
     setResetCount(resetCount + 1);
     handleClose();
   };
@@ -84,8 +92,14 @@ const CursoModal = ({ show, handleClose, cursoInicial, campi, turnos }) => {
     reloadPageAndCloseModal();
   };
 
+  useEffect(() => {
+    return () => {
+      reset(defaultValues);
+    };
+  }, []);
+
   return (
-    <Modal open={show} onClose={handleClose}>
+    <Modal open={show} onClose={handleModalClose}>
       <Fade in={show}>
         <Box
           component="form"
@@ -184,4 +198,4 @@ const CursoModal = ({ show, handleClose, cursoInicial, campi, turnos }) => {
   );
 };
 
-export default CursoModal;
+export default CriarCursoModal;
