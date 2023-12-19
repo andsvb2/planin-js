@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { CursoModal } from "@form/CursoModal";
+import { useEffect, useState, useCallback } from "react";
+import { CriarCursoModal, EditarCursoModal } from "@form/CursoModal";
 import { Menu } from "@ui/Menu";
 import { CardCurso } from "@ui/CardCurso";
 import Box from "@mui/material/Box";
@@ -8,37 +8,66 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import AvisoSemEntidade from "@ui/AvisoSemEntidade";
-import { getCursosDadosAdicionais } from "@repository/curso.js";
-import { getCampiInstituicao } from "@repository/campus.js";
+import {
+  getCursoById,
+  getCursoCampusTurno,
+  getCursosCampiInstituicoes,
+} from "@repository/curso.js";
+import { getCampi } from "@repository/campus.js";
 import { getTurnos } from "@repository/turno.js";
 
 const Curso = () => {
-  const [showCursoModal, setShowCursoModal] = useState(false);
-  const [editarCurso, setEditarCurso] = useState(null);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [cursos, setCursos] = useState([]);
   const [campi, setCampi] = useState([]);
   const [turnos, setTurnos] = useState([]);
+  const [cursoSelecionado, setCursoSelecionado] = useState(null);
 
-  useEffect(() => {
-    const fetchCampiAndTurnos = async () => {
-      const fetchedCursos = await getCursosDadosAdicionais();
-      const fetchedTurnos = await getTurnos();
-      const fetchedCampi = await getCampiInstituicao();
-      setCursos(fetchedCursos);
-      setTurnos(fetchedTurnos);
-      setCampi(fetchedCampi);
-    };
-    fetchCampiAndTurnos();
+  const fetchCursos = useCallback(async () => {
+    const fetchedCursos = await getCursosCampiInstituicoes();
+    setCursos(fetchedCursos);
+    await getCampiAndTurnos();
   }, []);
 
-  const handleCardClick = (curso) => {
-    setEditarCurso(curso);
-    setShowCursoModal(true);
+  useEffect(() => {
+    fetchCursos();
+  }, [fetchCursos]);
+
+  const handleEditClick = async (curso) => {
+    console.log("Curso.jsx -> handleEditClick: ", curso);
+    const cursoEditavel = await getCursoById(curso.id);
+    console.log(cursoEditavel);
+    setCursoSelecionado(null);
+    setCursoSelecionado(cursoEditavel);
+    setShowEditModal(true);
   };
 
-  const handleModalClose = () => {
-    setEditarCurso(null);
-    setShowCursoModal(false);
+  const handleCreateClick = () => {
+    setCursoSelecionado(null);
+    setShowCreateModal(true);
+  };
+
+  const handleCriarModalClose = async () => {
+    setShowCreateModal(false);
+    // await fetchCursos();
+  };
+
+  const handleEditModalClose = async () => {
+    setCursoSelecionado(null);
+    setShowEditModal(false);
+    // await fetchCursos();
+  };
+
+  const getCampiAndTurnos = async () => {
+    try {
+      const fetchedTurnos = await getTurnos();
+      const fetchedCampi = await getCampi();
+      setTurnos(fetchedTurnos);
+      setCampi(fetchedCampi);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -81,7 +110,7 @@ const Curso = () => {
                   width: "152px",
                   marginRight: "20px",
                 }}
-                onClick={() => setShowCursoModal(true)}
+                onClick={handleCreateClick}
               >
                 {" "}
                 + Curso
@@ -93,23 +122,29 @@ const Curso = () => {
               cursos.map((curso) => (
                 <CardCurso
                   key={curso.id}
-                  instituicao_campus={`${curso.campus.instituicao.sigla} - ${curso.campus.sigla}`}
+                  campus={`${curso.campus.nome}`}
                   nome_curso={curso.nome}
                   curso_id={curso.id}
-                  onCardClick={() => handleCardClick(curso)}
+                  onCardClick={() => handleEditClick(curso)}
                 />
               ))
             ) : (
               <AvisoSemEntidade mensagem="Nenhum curso cadastrado." />
             )}
           </Box>
-          <CursoModal
-            show={showCursoModal}
-            handleClose={handleModalClose}
-            cursoInicial={editarCurso}
-            campi={campi}
-            turnos={turnos}
-          />
+          <Box>
+            <CriarCursoModal
+              show={showCreateModal}
+              handleClose={handleCriarModalClose}
+              campi={campi}
+              turnos={turnos}
+            />
+            <EditarCursoModal
+              show={showEditModal}
+              handleClose={handleEditModalClose}
+              curso={cursoSelecionado}
+            />
+          </Box>
         </Stack>
       </Grid>
     </Grid>

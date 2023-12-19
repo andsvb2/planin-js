@@ -5,26 +5,18 @@ import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Unstable_Grid2";
 import Button from "@mui/material/Button";
-import { criarCurso, atualizarCurso, apagarCurso } from "@repository/curso.js";
+import { criarCurso } from "@repository/curso.js";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import { InputTexto } from "@comp/form/InputTexto";
 import { AutocompleteRHF } from "@comp/form/AutocompleteRHF";
 
-const CursoModal = ({ show, handleClose, cursoInicial, campi, turnos }) => {
+const CriarCursoModal = ({ show, handleClose, campi, turnos }) => {
   const [resetCount, setResetCount] = useState(0);
-
-  console.log(cursoInicial);
 
   const defaultCampi = {
     options: campi,
-    getOptionLabel: (option) =>
-      option.instituicao.sigla +
-      " - " +
-      option.sigla +
-      " (" +
-      option.cidade +
-      ")",
+    getOptionLabel: (option) => option.nome,
   };
 
   const defaultTurnos = {
@@ -33,17 +25,11 @@ const CursoModal = ({ show, handleClose, cursoInicial, campi, turnos }) => {
   };
 
   const defaultValues = {
-    nome: cursoInicial ? cursoInicial.nome : "",
-    campus_id: cursoInicial
-      ? campi.find((campus) => campus.id === cursoInicial.campus_id)
-      : "",
-    turno_id: cursoInicial
-      ? turnos.find((turno) => turno.id === cursoInicial.turno_id)
-      : "",
-    sigla: cursoInicial ? cursoInicial.sigla : "",
+    nome: "",
+    campus_id: "",
+    turno_id: "",
+    sigla: "",
   };
-
-  console.log(cursoInicial);
 
   const {
     watch,
@@ -61,28 +47,24 @@ const CursoModal = ({ show, handleClose, cursoInicial, campi, turnos }) => {
     handleClose();
   }
 
-  const onSubmit = (values) => {
-    if (cursoInicial) {
-      atualizarCurso({ ...cursoInicial, ...values }, cursoInicial.id);
-    } else {
-      const curso = { ...values };
-      criarCurso(curso);
-    }
+  const onSubmit = async (values) => {
+    const curso = { ...values };
+    console.log(curso);
+    await criarCurso(curso);
     reloadPageAndCloseModal();
   };
 
   const handleReset = () => {
-    reset({ ...defaultValues, campus_id: "", turno_id: "" });
+    reset(defaultValues);
     setResetCount(resetCount + 1);
     handleClose();
   };
 
-  const handleDelete = () => {
-    if (cursoInicial) {
-      apagarCurso(cursoInicial.id);
-    }
-    reloadPageAndCloseModal();
-  };
+  useEffect(() => {
+    return () => {
+      reset(defaultValues);
+    };
+  }, []);
 
   return (
     <Modal open={show} onClose={handleClose}>
@@ -105,7 +87,7 @@ const CursoModal = ({ show, handleClose, cursoInicial, campi, turnos }) => {
         >
           <Stack spacing={1.5}>
             <Typography variant="h5" style={{ fontFamily: "Lato, sans-serif" }}>
-              {cursoInicial ? "Editar curso" : "Criar curso"}
+              Criar curso
             </Typography>
 
             <InputTexto
@@ -138,12 +120,6 @@ const CursoModal = ({ show, handleClose, cursoInicial, campi, turnos }) => {
               rules={{ required: "Selecione um campus." }}
               error={!!errors.campus_id}
               helperText={errors.campus_id?.message}
-              value={
-                cursoInicial
-                  ? campi.find((campus) => campus.id === cursoInicial.campus_id)
-                  : null
-              }
-              defaultValue={campi[0]}
             />
 
             <AutocompleteRHF
@@ -162,16 +138,6 @@ const CursoModal = ({ show, handleClose, cursoInicial, campi, turnos }) => {
               <Button onClick={handleReset} variant="outlined" type="reset">
                 Cancelar
               </Button>
-              {cursoInicial && (
-                <Button
-                  onClick={handleDelete}
-                  variant="contained"
-                  color="secondary"
-                  sx={{ backgroundColor: "#F15757" }}
-                >
-                  Excluir
-                </Button>
-              )}
 
               <Button variant="contained" type="submit">
                 Salvar
@@ -184,4 +150,4 @@ const CursoModal = ({ show, handleClose, cursoInicial, campi, turnos }) => {
   );
 };
 
-export default CursoModal;
+export default CriarCursoModal;

@@ -7,7 +7,8 @@ export async function getCursoById(id) {
   const { data: curso, error } = await supabase
     .from(TABLE_NAME)
     .select("*")
-    .eq(KEY, id);
+    .eq(KEY, id)
+    .single();
   if (error) {
     throw error;
   }
@@ -22,10 +23,22 @@ export async function getCursos() {
   return curso;
 }
 
-export async function getCursosDadosAdicionais() {
+export async function getCursosCampiInstituicoes() {
   let { data: curso, error } = await supabase
     .from("curso")
     .select("*, campus(nome, sigla, instituicao(nome, sigla))");
+  if (error) {
+    throw error;
+  }
+  return curso;
+}
+
+export async function getCursoCampusTurno(id) {
+  let { data: curso, error } = await supabase
+    .from("curso")
+    .select("*, campus(nome, sigla), turno(turno)")
+    .eq(KEY, id)
+    .single();
   if (error) {
     throw error;
   }
