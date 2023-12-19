@@ -17,7 +17,7 @@ const Login = () => {
         token: response.credential,
         nonce: "", // must be the same one as provided in data-nonce (if any)
       },
-      { redirectTo: "http://localhost:5173/cursos" },
+      { redirectTo: "https://planin.vercel.app/cursos" },
     );
   }
 
